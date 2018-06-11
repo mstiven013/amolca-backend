@@ -19,6 +19,7 @@ app.use(express.json());
 
 //Routes
 app.use(API_URL + '/users', require('./routes/users'));
+app.use(API_URL + '/shops', require('./routes/shops'));
 
 //Static files
 app.use(express.static(__dirname + '/public'));

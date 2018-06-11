@@ -31,20 +31,10 @@ router.get('/:id', async (req, res) => {
 
     User.findById(userId, (err, user) => {
         //If user not exists
-        if(err && err.name === 'CastError') {
-            return res.status(404).send({
-                status: 404,
-                message: 'This resource not exists'
-            });
-        }
+        if(!user) return res.status(404).send({status: 404, message: 'This resource not exists'});
 
         //If user exists but an error has ocurred
-        if(err && err.name !== 'CastError') {
-            return res.status(500).send({
-                status: 500,
-                message: 'An error has ocurred in server'
-            });
-        }
+        if(err) return res.status(500).send({status: 500, message: 'An error has ocurred in server'});
 
         //Send OK status and user
         res.status(200).send(user)
