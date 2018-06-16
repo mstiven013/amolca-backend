@@ -17,6 +17,21 @@ app.set('port', process.env.PORT || 3000);
 app.use(morgan('dev'));
 app.use(express.json());
 
+// Add headers
+app.use(function (req, res, next) {
+    // Website you wish to allow to connect
+    res.setHeader('Access-Control-Allow-Origin', '*');
+
+    // Request methods you wish to allow
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+
+    // Request headers you wish to allow
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+
+    // Pass to next layer of middleware
+    next();
+});
+
 //Routes
 app.use(API_URL + '/users', require('./routes/users'));
 app.use(API_URL + '/shops', require('./routes/shops'));
