@@ -1,32 +1,16 @@
 'use strict'
 
-const express = require('express');
-const router = express.Router();
+const mongoose = require('mongoose');
+const User = require('./UsersModel');
 
-const User = require('../components/users/UsersModel');
-
-//Get all users
-router.get('/', async (req, res) => {
-    if(req.headers["content-type"] && req.headers["content-type"] !== 'application/json'){
-        return res.status(500).send({
-            status: 500,
-            message: 'Server not supported the Content-Type header sended in this request'
-        })
-    }
-
+//Controller to get ALL users
+async function getAllUsers(req, res) {
     const users = await User.find();
     res.json(users);
-});
+}
 
-//Get an user
-router.get('/:id', async (req, res) => {
-    if(req.headers["content-type"] && req.headers["content-type"] !== 'application/json'){
-        return res.status(500).send({
-            status: 500,
-            message: 'Server not supported the Content-Type header sended in this request'
-        })
-    }
-
+//Controller to get ONE user
+async function getOneUser(req, res) {
     let userId = req.params.id;
 
     User.findById(userId, (err, user) => {
@@ -39,17 +23,10 @@ router.get('/:id', async (req, res) => {
         //Send OK status and user
         res.status(200).send(user)
     });
-});
+}
 
-//Set user
-router.post('/', async (req, res) => {
-    if(req.headers["content-type"] !== 'application/json'){
-        return res.status(500).send({
-            status: 500,
-            message: 'Server not supported the Content-Type header sended in this request'
-        })
-    }
-
+//Controller to create User
+async function createUser(req, res) {
     if (!req.body.name || !req.body.email || !req.body.role || !req.body.country) {
         return res.status(400).send({
             status: 400,
@@ -77,10 +54,10 @@ router.post('/', async (req, res) => {
         //Send status and user stored
         res.status(201).send(userStored);
     });
-});
+}
 
-//Delete an user
-router.delete('/:id', (req, res) => {
+//Controller to delete one user
+async function deleteUser(req, res) {
     if(req.headers["content-type"] !== 'application/json'){
         return res.status(500).send({
             status: 500,
@@ -105,9 +82,10 @@ router.delete('/:id', (req, res) => {
             res.status(200).send({status: 200, message: 'Resource successfully removed'});
         });
     });
-});
+}
 
-router.put('/:id', (req, res) => {
+//Controller to update an user
+async function updateUser() {
     if(req.headers["content-type"] !== 'application/json'){
         return res.status(500).send({
             status: 500,
@@ -127,7 +105,12 @@ router.put('/:id', (req, res) => {
 
         res.status(200).send(doc)
     });
+}
 
-});
-
-module.exports = router;
+module.exports = {
+    getAllUsers,
+    getOneUser,
+    createUser,
+    deleteUser,
+    updateUser
+}

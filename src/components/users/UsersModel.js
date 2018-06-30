@@ -18,7 +18,7 @@ const UserSchema = new Schema({
     role: [{
         type: String,
         required: true,
-        enum: ['SUPERADMIN', 'SELLER', 'AUTHOR', 'EDITOR', 'CLIENT']
+        enum: ['SUPERADMIN', 'ADMIN', 'SELLER', 'AUTHOR', 'EDITOR', 'CLIENT', 'VIDEO_EDITOR']
     }],
     avatar: String,
     description: String,
