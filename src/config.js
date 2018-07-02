@@ -3,7 +3,8 @@
 const config = {
     name: 'Amolca',
     version: '1.0',
-    api: '/api/'
+    api: '/api/',
+    secret: 'mysecretkeyapi'
 }
 
 module.exports = config;

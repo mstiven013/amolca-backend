@@ -20,6 +20,10 @@ const UserSchema = new Schema({
         required: true,
         enum: ['SUPERADMIN', 'ADMIN', 'SELLER', 'AUTHOR', 'EDITOR', 'CLIENT', 'VIDEO_EDITOR']
     }],
+    signupDate: [{
+        type: Date,
+        default: Date.now()
+    }],
     avatar: String,
     description: String,
     phone: Number,

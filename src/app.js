@@ -1,7 +1,7 @@
 'use strict'
 
 //Requires
-const appConfig = require('./config');
+const config = require('./config');
 const express = require('express');
 const morgan = require('morgan');
 const mongoose = require('mongoose');
@@ -10,10 +10,11 @@ const mongoose = require('mongoose');
 const app = express();
 
 //Settings
-const API_URL = appConfig.api + appConfig.version;
+const API_URL = config.api + config.version;
 app.set('port', process.env.PORT || 3000);
 
 //Middlewares
+const auth = require('./components/auth/authMiddleware');
 app.use(morgan('dev'));
 app.use(express.json());
 
@@ -33,7 +34,7 @@ app.use(function (req, res, next) {
 });
 
 //Routes
-app.use(API_URL + '/users', require('./components/users/usersRoutes'));
+app.use(API_URL + '/users', auth.isAuth, require('./components/users/usersRoutes'));
 app.use(API_URL + '/shops', require('./components/shops/shopsRoutes'));
 
 //Static files
