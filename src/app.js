@@ -34,8 +34,8 @@ app.use(function (req, res, next) {
 });
 
 //Routes
-app.use(API_URL + '/users', auth.isAuth, require('./components/users/usersRoutes'));
-app.use(API_URL + '/shops', require('./components/shops/shopsRoutes'));
+app.use(API_URL + '/users', require('./components/users/usersRoutes'));
+app.use(API_URL + '/shops', auth.isAuth, require('./components/shops/shopsRoutes'));
 
 //Static files
 app.use(express.static(__dirname + '/public'));

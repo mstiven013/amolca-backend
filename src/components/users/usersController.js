@@ -53,7 +53,7 @@ async function signUp(req, res) {
         }
 
         //Send status and user stored
-        res.status(201).send({'token': TokenService.createToken(user), userStore});
+        res.status(201).send({'access_token': TokenService.createToken(user), user});
     });
 }
 
@@ -67,7 +67,7 @@ async function signIn(req, res) {
         if(!user) return res.status(404).send({status: 404, message: 'This resource not exists'})
 
         req.user = user;
-        return res.status(200).send({status: 200, message: 'Logged successfully', token: TokenService.createToken(user)})
+        return res.status(200).send({status: 200, message: 'Logged successfully', access_token: TokenService.createToken(user)})
     })
 }
 
