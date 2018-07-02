@@ -13,7 +13,7 @@ router.get('/', UserCtrl.getAllUsers);
 router.get('/:id', UserCtrl.getOneUser);
 
 //Set user
-router.post('/', UserCtrl.createUser);
+router.post('/', UserCtrl.signUp);
 
 //Delete an user
 router.delete('/:id', UserCtrl.deleteUser);

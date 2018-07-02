@@ -2,6 +2,7 @@
 
 const mongoose = require('mongoose');
 const User = require('./UsersModel');
+const TokenService = require('../auth/tokenService');
 
 //Controller to get ALL users
 async function getAllUsers(req, res) {
@@ -25,8 +26,8 @@ async function getOneUser(req, res) {
     });
 }
 
-//Controller to create User
-async function createUser(req, res) {
+//Controller register an User
+async function signUp(req, res) {
     if (!req.body.name || !req.body.email || !req.body.role || !req.body.country) {
         return res.status(400).send({
             status: 400,
@@ -52,8 +53,22 @@ async function createUser(req, res) {
         }
 
         //Send status and user stored
-        res.status(201).send(userStored);
+        res.status(201).send({'token': TokenService.createToken(user), userStore});
     });
+}
+
+//Controller to login user
+async function signIn(req, res) {
+    User.find({email: req.body.email}, (err, user) => {
+        //If an error has ocurred
+        if(err) return res.status(500).send({status: 500, message: `An error has ocurred getting this resource: ${err}`})
+
+        //If this user not exist's
+        if(!user) return res.status(404).send({status: 404, message: 'This resource not exists'})
+
+        req.user = user;
+        return res.status(200).send({status: 200, message: 'Logged successfully', token: TokenService.createToken(user)})
+    })
 }
 
 //Controller to delete one user
@@ -110,7 +125,8 @@ async function updateUser() {
 module.exports = {
     getAllUsers,
     getOneUser,
-    createUser,
+    signUp,
+    signIn,
     deleteUser,
     updateUser
 }
