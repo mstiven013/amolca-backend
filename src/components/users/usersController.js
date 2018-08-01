@@ -26,51 +26,6 @@ async function getOneUser(req, res) {
     });
 }
 
-//Controller register an User
-async function signUp(req, res) {
-    if (!req.body.name || !req.body.email || !req.body.role || !req.body.country) {
-        return res.status(400).send({
-            status: 400,
-            message: 'Bad request'
-        })
-    }
-
-    let user = new User(req.body);
-
-    user.save(function (err, userStored) {
-        if(err && err.code === 11000) {
-            //If this user already exists
-            return res.status(409).send({
-                status: 409,
-                message: 'This resource already exists'
-            });
-        } else if(err && err.code !== 11000) {
-            //If user are not exists but exists an error
-            return res.status(500).send({
-                status: 500,
-                message: `Error saving the resource: ${err}`
-            });
-        }
-
-        //Send status and user stored
-        res.status(201).send({'access_token': TokenService.createToken(user), user});
-    });
-}
-
-//Controller to login user
-async function signIn(req, res) {
-    User.find({email: req.body.email}, (err, user) => {
-        //If an error has ocurred
-        if(err) return res.status(500).send({status: 500, message: `An error has ocurred getting this resource: ${err}`})
-
-        //If this user not exist's
-        if(!user) return res.status(404).send({status: 404, message: 'This resource not exists'})
-
-        req.user = user;
-        return res.status(200).send({status: 200, message: 'Logged successfully', access_token: TokenService.createToken(user)})
-    })
-}
-
 //Controller to delete one user
 async function deleteUser(req, res) {
     if(req.headers["content-type"] !== 'application/json'){
@@ -125,8 +80,6 @@ async function updateUser() {
 module.exports = {
     getAllUsers,
     getOneUser,
-    signUp,
-    signIn,
     deleteUser,
     updateUser
 }

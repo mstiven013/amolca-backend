@@ -5,6 +5,7 @@ const config = require('./config');
 const express = require('express');
 const morgan = require('morgan');
 const mongoose = require('mongoose');
+const bodyParser = require('body-parser'); 
 
 //Execute requires
 const app = express();
@@ -17,6 +18,8 @@ app.set('port', process.env.PORT || 3000);
 const auth = require('./components/auth/authMiddleware');
 app.use(morgan('dev'));
 app.use(express.json());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 // Add headers
 app.use(function (req, res, next) {
@@ -27,14 +30,15 @@ app.use(function (req, res, next) {
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
 
     // Request headers you wish to allow
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With');
 
     // Pass to next layer of middleware
     next();
 });
 
 //Routes
-app.use(API_URL + '/users', require('./components/users/usersRoutes'));
+app.use(API_URL, require('./components/auth/authRoutes'));
+app.use(API_URL + '/users', auth.isAuth, require('./components/users/usersRoutes'));
 app.use(API_URL + '/shops', auth.isAuth, require('./components/shops/shopsRoutes'));
 
 //Static files

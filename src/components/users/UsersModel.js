@@ -69,6 +69,13 @@ UserSchema.pre('save', function(next) {
     });
 })
 
+UserSchema.methods.comparePassword = function(candidatePassword, cb) {
+    bcrypt.compare(candidatePassword, this.password, function(err, isMatch) {
+        if (err) return cb(err);
+        cb(null, isMatch);
+    });
+};
+
 UserSchema.methods.gravatar = function() {
     if(!this.email) return 'https://gravatar.com/avatar/?s=200&d=retro'
 
@@ -78,4 +85,4 @@ UserSchema.methods.gravatar = function() {
 
 const User = mongoose.model('User', UserSchema)
 
-module.exports = User;
+module.exports = mongoose.model('User', UserSchema);
