@@ -105,3 +105,7 @@ const BookModel = new Schema({
         default: 1
     }
 });
+
+const Book = mongoose.model('Book', BookSchema)
+
+module.exports = mongoose.model('Book', BookSchema);
