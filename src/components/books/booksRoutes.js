@@ -15,7 +15,7 @@ router.get('/', auth.isAuth, BookCtrl.getAllbooks);
 router.get('/:id', auth.isAuth, BookCtrl.getOneBookById);
 
 //Get an book by SLUG
-router.get('/slug/:id', auth.isAuth, BookCtrl.getOneBookBySlug);
+router.get('/slug/:slug', auth.isAuth, BookCtrl.getOneBookBySlug);
 
 //Create book
 router.post('/', BookCtrl.createBook);

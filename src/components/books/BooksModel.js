@@ -68,7 +68,10 @@ const BookModel = new Schema({
         required: true,
         unique: true
     },
-    userId: String,
+    userId: {
+        type: String,
+        required: true
+    },
     variations: [{
         description: String,
         name: String,
