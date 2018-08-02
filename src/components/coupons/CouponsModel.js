@@ -68,6 +68,10 @@ const CouponSchema = new Schema({
         use: Number,
         user: Number
     },
+    userId: {
+        type: String,
+        required: true
+    },
     usage: [{
         userId: String,
         use: {

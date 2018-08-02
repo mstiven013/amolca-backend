@@ -13,7 +13,7 @@ router.get('/', CouponCtrl.getAllCoupons);
 router.get('/:id', CouponCtrl.getOneCouponById);
 
 //Get one Coupon by code
-router.get('/:code', CouponCtrl.getOneCouponByCode);
+router.get('/code/:code', CouponCtrl.getOneCouponByCode);
 
 //Create Coupon
 router.post('/', CouponCtrl.createCoupon);
