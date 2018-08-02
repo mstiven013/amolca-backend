@@ -38,9 +38,23 @@ async function getOneBookBySlug(req, res) {
         });
 }
 
+//Controller function to get ONE Book by USER ID
+async function getOneBookByUserId(req, res) {
+    Book.find({ userId: req.params.user })
+        .exec((err, book) => {
+            //If book not exists
+            if(!book) return res.status(404).send({status: 404, message: 'This resource not exists'});
+
+            //If an error has ocurred
+            if(err) return res.status(500).send({status: 500, message: `An error has ocurred in server: ${err}`});
+
+            return res.status(200).send(book);
+        });
+}
+
 //Controller function to create one Book
 async function createBook(req, res) {
-    if(!req.body.author || !req.body.name || !req.body.publicationYear || !req.body.slug || !req.body.userId || !req.body.restrictions.validResource) {
+    if(!req.body.author || !req.body.name || !req.body.publicationYear || !req.body.slug || !req.body.userId) {
         return res.status(400).send({status: 400, message: 'Bad request'})
     }
 
@@ -92,6 +106,7 @@ module.exports = {
     getAllbooks,
     getOneBookById,
     getOneBookBySlug,
+    getOneBookByUserId,
     createBook,
     deleteBook,
     updateBook

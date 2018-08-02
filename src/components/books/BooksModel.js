@@ -68,6 +68,9 @@ const BookSchema = new Schema({
         required: true,
         unique: true
     },
+    specialty: [{
+        type: String
+    }],
     userId: {
         type: String,
         required: true
@@ -82,7 +85,8 @@ const BookSchema = new Schema({
             isbn: String,
             state: {
                 type: String,
-                enum: ["RESERVED", "SPENT", "STOCK"]
+                enum: ["RESERVED", "SPENT", "STOCK"],
+                default: "STOCK"
             },
             individualSale: {
                 type: Boolean,
