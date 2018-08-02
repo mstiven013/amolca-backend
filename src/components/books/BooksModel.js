@@ -63,6 +63,11 @@ const BookModel = new Schema({
     relatedProducts: [{
         type: String
     }],
+    slug: {
+        type: String,
+        required: true,
+        unique: true
+    },
     userId: String,
     variations: [{
         description: String,

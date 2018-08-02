@@ -11,13 +11,16 @@ const auth = require('../auth/authMiddleware');
 //Get all books
 router.get('/', auth.isAuth, BookCtrl.getAllbooks);
 
-//Get an user
-router.get('/:id', auth.isAuth, BookCtrl.getOneUser);
+//Get an book by ID
+router.get('/:id', auth.isAuth, BookCtrl.getOneBookById);
 
-//Delete an user
-router.delete('/:id', auth.isAuth, BookCtrl.deleteUser);
+//Get an book by SLUG
+router.get('/slug/:id', auth.isAuth, BookCtrl.getOneBookBySlug);
 
-//Update user
-router.put('/:id', auth.isAuth, BookCtrl.updateUser);
+//Delete an book
+router.delete('/:id', auth.isAuth, BookCtrl.deleteBook);
+
+//Update book
+router.put('/:id', auth.isAuth, BookCtrl.updateBook);
 
 module.exports = router;
