@@ -15,6 +15,9 @@ router.get('/:id', CouponCtrl.getOneCouponById);
 //Get one Coupon by code
 router.get('/code/:code', CouponCtrl.getOneCouponByCode);
 
+//Get one Coupon by user
+router.get('/user/:user', CouponCtrl.getOneCouponByUser);
+
 //Create Coupon
 router.post('/', CouponCtrl.createCoupon);
 

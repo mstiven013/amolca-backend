@@ -38,6 +38,20 @@ function getOneCouponByCode(req, res) {
         });
 }
 
+//Controller function to get ONE Coupon by USER
+function getOneCouponByUser(req, res) {
+    Coupon.find({ userId: req.params.user })
+        .exec((err, coupon) => {
+            //If coupon not exists
+            if(!coupon) return res.status(404).send({status: 404, message: 'This resource not exists'});
+
+            //If an error has ocurred
+            if(err) return res.status(500).send({status: 500, message: `An error has ocurred in server: ${err}`});
+
+            return res.status(200).send(coupon);
+        });
+}
+
 //Function to create ONE Coupon
 function createCoupon(req, res) {
     if(!req.body.name || !req.body.discount || !req.body.code || !req.body.method || !req.body.restrictions.type || !req.body.restrictions.validResource) {
@@ -47,7 +61,9 @@ function createCoupon(req, res) {
     let coupon = new Coupon(req.body);
 
     coupon.save((err, couponStored) => {
-        if(err) return res.status(500).send({status: 500, message: `An error has ocurred saving this resource: ${err}`});
+        if(err && err.code == 11000) return res.status(409).send({status: 409, message: `This resource alredy exists`});
+
+        if(err && err.code != 11000) return res.status(500).send({status: 500, message: `An error has ocurred saving this resource: ${err}`});
 
         return res.status(201).send(couponStored);
     });
@@ -91,6 +107,7 @@ module.exports = {
     getAllCoupons,
     getOneCouponById,
     getOneCouponByCode,
+    getOneCouponByUser,
     createCoupon,
     updateCoupon,
     deleteCoupon
