@@ -52,11 +52,11 @@ const CouponSchema = new Schema({
         },
         validResource: {
             type: String,
+            required: true,
             enum: ["USER", "ALL_USERS", "ALL_USERS_EXCEPT", "PRODUCT", "ALL_PRODUCTS", "ALL_PRODUCTS_EXCEPT", "SPECIALTY", "SPECIALTY_EXCEPT"]
         },
         validFor: [{
-            type: String,
-            required: true
+            type: String
         }],
         invalidFor: [{
             type: String

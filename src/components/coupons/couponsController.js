@@ -26,7 +26,7 @@ function getOneCoupon(req, res) {
 
 //Function to create ONE Coupon
 function createCoupon(req, res) {
-    if(!req.body.name || !req.body.discount || !req.body.code || !req.body.method || !req.body.restrictions.type || !req.body.restrictions.validFor || !req.body.state) {
+    if(!req.body.name || !req.body.discount || !req.body.code || !req.body.method || !req.body.restrictions.type || !req.body.restrictions.validResource) {
         return res.status(400).send({status: 400, message: 'Bad request'})
     }
 
