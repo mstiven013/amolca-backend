@@ -9,8 +9,8 @@ async function getAllCoupons(req, res) {
     res.status(200).send(Coupons);
 }
 
-//Controller function to get ONE Coupon
-function getOneCoupon(req, res) {
+//Controller function to get ONE Coupon by ID
+function getOneCouponById(req, res) {
     Coupon.findById(req.params.id, (err, coupon) => {
 
         //If coupon not exists
@@ -22,6 +22,20 @@ function getOneCoupon(req, res) {
         return res.status(200).send(coupon);
 
     });
+}
+
+//Controller function to get ONE Coupon by CODE
+function getOneCouponByCode(req, res) {
+    Coupon.findOne({ code: req.params.code })
+        .exec((err, coupon) => {
+            //If coupon not exists
+            if(!coupon) return res.status(404).send({status: 404, message: 'This resource not exists'});
+
+            //If an error has ocurred
+            if(err) return res.status(500).send({status: 500, message: `An error has ocurred in server: ${err}`});
+
+            return res.status(200).send(coupon);
+        });
 }
 
 //Function to create ONE Coupon
@@ -75,7 +89,8 @@ function deleteCoupon(req, res) {
 
 module.exports = {
     getAllCoupons,
-    getOneCoupon,
+    getOneCouponById,
+    getOneCouponByCode,
     createCoupon,
     updateCoupon,
     deleteCoupon

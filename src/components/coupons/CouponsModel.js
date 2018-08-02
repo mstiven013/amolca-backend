@@ -17,7 +17,8 @@ const CouponSchema = new Schema({
         type: String,
         required: true,
         min: [3, 'Minlength is 3 characters'],
-        max: [15, 'Maxlength is 15 characters']
+        max: [15, 'Maxlength is 15 characters'],
+        unique: true
     },
     method: {
         enum: ["PERCENTAGE", "FIXED_VALUE"],
