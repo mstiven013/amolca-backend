@@ -9,15 +9,15 @@ const BookCtrl = require('./booksController');
 const auth = require('../auth/authMiddleware');
 
 //Get all books
-router.get('/', auth.isAuth, BookCtrl.getBooks);
+router.get('/', BookCtrl.getBooks);
 
 //Create book
 router.post('/', BookCtrl.createBook);
 
 //Delete an book
-router.delete('/:id', auth.isAuth, BookCtrl.deleteBook);
+router.delete('/:id', BookCtrl.deleteBook);
 
 //Update book
-router.put('/:id', auth.isAuth, BookCtrl.updateBook);
+router.put('/:id', BookCtrl.updateBook);
 
 module.exports = router;
