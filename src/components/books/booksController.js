@@ -47,9 +47,9 @@ async function getBooks(req, res) {
             let userId = req.query.id;
 
             Book.find({ userId: userId })
-                .exec((err, book) => {
-                    //If book not exists
-                    if(!book || book.length < 1) return res.status(404).send({status: 404, message: 'Not exists books registered by this user'});
+                .exec((err, books) => {
+                    //If books not exists
+                    if(!books || books.length < 1) return res.status(404).send({status: 404, message: 'Not exists books registered by this user'});
 
                     //If an error has ocurred
                     if(err) return res.status(500).send({status: 500, message: `An error has ocurred in server: ${err}`});
