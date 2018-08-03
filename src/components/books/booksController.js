@@ -4,52 +4,150 @@ const mongoose = require('mongoose');
 const Book = require('./BooksModel');
 
 //Controller function to get ALL Books
-async function getAllbooks(req, res) {
-    const books = await Book.find();
-    return res.status(200).send(books);
-}
+async function getBooks(req, res) {
 
-//Controller function to get ONE Book by ID
-async function getOneBookById(req, res) {
-    Book.findById(req.params.id, (err, book) => {
+    if(req.query.searchby) {
+        let searchby = req.query.searchby;
 
-        //If book not exists
-        if(!book) return res.status(404).send({status: 404, message: 'This resource not exists'});
+        //Controller function to get ONE Book by ID
+        if(searchby == 'id') {
+            let bookId = req.query.id;
 
-        //If an error has ocurred
-        if(err) return res.status(500).send({status: 500, message: `An error has ocurred in server: ${err}`});
+            Book.findById(bookId, (err, book) => {
 
-        return res.status(200).send(book);
+                //If book not exists
+                if(!book) return res.status(404).send({status: 404, message: 'This resource not exists'});
+        
+                //If an error has ocurred
+                if(err) return res.status(500).send({status: 500, message: `An error has ocurred in server: ${err}`});
+        
+                return res.status(200).send(book);
+        
+            });
+        }
 
-    });
-}
+        //Controller function to get ONE Book by SLUG
+        if(searchby == 'slug') {
+            let bookSlug = req.query.slug;
 
-//Controller function to get ONE Book by SLUG
-async function getOneBookBySlug(req, res) {
-    Book.findOne({ slug: req.params.slug })
-        .exec((err, book) => {
-            //If book not exists
-            if(!book) return res.status(404).send({status: 404, message: 'This resource not exists'});
+            Book.findOne({ slug: bookSlug })
+                .exec((err, book) => {
+                    //If book not exists
+                    if(!book) return res.status(404).send({status: 404, message: 'This resource not exists'});
 
-            //If an error has ocurred
-            if(err) return res.status(500).send({status: 500, message: `An error has ocurred in server: ${err}`});
+                    //If an error has ocurred
+                    if(err) return res.status(500).send({status: 500, message: `An error has ocurred in server: ${err}`});
 
-            return res.status(200).send(book);
-        });
-}
+                    return res.status(200).send(book);
+                });
+        }
 
-//Controller function to get ONE Book by USER ID
-async function getOneBookByUserId(req, res) {
-    Book.find({ userId: req.params.user })
-        .exec((err, book) => {
-            //If book not exists
-            if(!book) return res.status(404).send({status: 404, message: 'This resource not exists'});
+        //Controller function to get ONE Book by USER ID
+        if(searchby == 'user') {
+            let userId = req.query.id;
 
-            //If an error has ocurred
-            if(err) return res.status(500).send({status: 500, message: `An error has ocurred in server: ${err}`});
+            Book.find({ userId: userId })
+                .exec((err, book) => {
+                    //If book not exists
+                    if(!book || book.length < 1) return res.status(404).send({status: 404, message: 'Not exists books registered by this user'});
 
-            return res.status(200).send(book);
-        });
+                    //If an error has ocurred
+                    if(err) return res.status(500).send({status: 500, message: `An error has ocurred in server: ${err}`});
+
+                    return res.status(200).send({"books": books, "count": books.length});
+                });
+        }
+
+        //Controller function to get Books by Author
+        if(searchby == 'author') {
+            let authorId = req.query.id;
+
+            Book.find({author: authorId})
+                .exec((err, books) => {
+                    //If book not exists
+                    if(!books || books.length < 1) return res.status(404).send({status: 404, message: 'This author not have books registered'});
+
+                    //If an error has ocurred
+                    if(err) return res.status(500).send({status: 500, message: `An error has ocurred in server: ${err}`});
+
+                    return res.status(200).send({"books": books, "count": books.length});
+                });
+        }
+
+        //Controller function to get Books by isbn
+        if(searchby == 'isbn') {
+            let isbn = req.query.isbn;
+
+            Book.findOne({"inventory.isbn" : isbn})
+                .exec((err, books) => {
+                    //If book not exists
+                    if(!books) return res.status(404).send({status: 404, message: 'This resource not exists'});
+
+                    //If an error has ocurred
+                    if(err) return res.status(500).send({status: 500, message: `An error has ocurred in server: ${err}`});
+
+                    return res.status(200).send(books);
+                });
+        }
+
+        //Controller function to get Books by state
+        if(searchby == 'state') {
+            let state = req.query.state.toUpperCase();
+
+            Book.find({"inventory.state" : state})
+                .exec((err, books) => {
+                    //If book not exists
+                    if(!books || books.length < 1) return res.status(404).send({status: 404, message: 'Not exists books with this inventory state'});
+
+                    //If an error has ocurred
+                    if(err) return res.status(500).send({status: 500, message: `An error has ocurred in server: ${err}`});
+
+                    return res.status(200).send({"books": books, "count": books.length});
+                });
+        }
+
+        //Controller function to get Books by Publication year
+        if(searchby == 'publication') {
+            let year = req.query.year;
+
+            Book.find({"publicationYear" : year})
+                .exec((err, books) => {
+                    //If book not exists
+                    if(!books || books.length < 1) return res.status(404).send({status: 404, message: 'Not exists books publicated in this year'});
+
+                    //If an error has ocurred
+                    if(err) return res.status(500).send({status: 500, message: `An error has ocurred in server: ${err}`});
+
+                    return res.status(200).send({"books": books, "count": books.length});
+                });
+        }
+
+        //Controller function to get Books by SPECIALTY
+        if(searchby == 'specialty') {
+            let spe = req.query.specialty;
+
+            Book.find({specialty: spe})
+                .exec((err, books) => {
+                    //If book not exists
+                    if(!books || books.length < 1) return res.status(404).send({status: 404, message: 'Not exists books in this specialty'});
+
+                    //If an error has ocurred
+                    if(err) return res.status(500).send({status: 500, message: `An error has ocurred in server: ${err}`});
+
+                    return res.status(200).send({"books": books, "count": books.length});
+                });
+        }
+
+    } else {
+
+        //Controller function to get ALL Books if not exists a query
+        Book.find().exec((err, books) => {
+            //If an error has ocurred in server
+            if(err) return res.status(500).send({status: 500, message: `An error has ocurred in server: ${err}`})
+
+            return res.status(200).send(books);
+        })
+    }
 }
 
 //Controller function to create one Book
@@ -61,7 +159,7 @@ async function createBook(req, res) {
     let book = new Book(req.body);
 
     book.save((err, bookStored) => {
-        if(err && err.code == 11000) return res.status(409).send({status: 409, message: `This resource alredy exists`});
+        if(err && err.code == 11000) return res.status(409).send({status: 409, message: `This resource alredy exists: ${err}`});
 
         if(err && err.code != 11000) return res.status(500).send({status: 500, message: `An error has ocurred saving this resource: ${err}`});
 
@@ -103,10 +201,7 @@ async function deleteBook(req, res) {
 }
 
 module.exports = {
-    getAllbooks,
-    getOneBookById,
-    getOneBookBySlug,
-    getOneBookByUserId,
+    getBooks,
     createBook,
     deleteBook,
     updateBook

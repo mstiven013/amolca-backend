@@ -9,16 +9,7 @@ const BookCtrl = require('./booksController');
 const auth = require('../auth/authMiddleware');
 
 //Get all books
-router.get('/', auth.isAuth, BookCtrl.getAllbooks);
-
-//Get an book by ID
-router.get('/:id', auth.isAuth, BookCtrl.getOneBookById);
-
-//Get an book by SLUG
-router.get('/slug/:slug', auth.isAuth, BookCtrl.getOneBookBySlug);
-
-//Get an book by USER ID
-router.get('/user/:user', auth.isAuth, BookCtrl.getOneBookByUserId);
+router.get('/', auth.isAuth, BookCtrl.getBooks);
 
 //Create book
 router.post('/', BookCtrl.createBook);

@@ -20,7 +20,8 @@ const BookSchema = new Schema({
             default: 0
         },
         isbn: {
-            type: String
+            type: String,
+            unique: true
         },
         state: {
             type: String,
@@ -96,8 +97,8 @@ const BookSchema = new Schema({
     }],
     version: [{
         type: String,
-        enum: ["PAPER", "EBOOK", "VIDEO"],
-        default: "PAPER"
+        default: "PAPER",
+        enum: ["PAPER", "EBOOK", "VIDEO"]
     }],
     visibility: {
         type: String,
