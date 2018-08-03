@@ -4,52 +4,61 @@ const mongoose = require('mongoose');
 const Coupon = require('./CouponsModel');
 
 //Controller function to get ALL Coupons
-async function getAllCoupons(req, res) {
-    const Coupons = await Coupon.find();
-    res.status(200).send(Coupons);
-}
+async function getCoupons(req, res) {
 
-//Controller function to get ONE Coupon by ID
-function getOneCouponById(req, res) {
-    Coupon.findById(req.params.id, (err, coupon) => {
+    let searchby = req.query.searchby;
 
-        //If coupon not exists
-        if(!coupon) return res.status(404).send({status: 404, message: 'This resource not exists'});
+    if(searchby) {
 
-        //If an error has ocurred
-        if(err) return res.status(500).send({status: 500, message: `An error has ocurred in server: ${err}`});
+        //Controller function to get ONE Coupon by ID
+        if(searchby == 'id') {
+            Coupon.findById(req.query.id, (err, coupon) => {
+                //If coupon not exists
+                if(!coupon) return res.status(404).send({status: 404, message: 'This resource not exists'});
+        
+                //If an error has ocurred
+                if(err) return res.status(500).send({status: 500, message: `An error has ocurred in server: ${err}`});
+        
+                return res.status(200).send(coupon);
+            });
+        }
 
-        return res.status(200).send(coupon);
+        //Controller function to get ONE Coupon by CODE
+        if(searchby == 'code') {
+            Coupon.findOne({ code: req.query.code })
+                .exec((err, coupon) => {
+                    //If coupon not exists
+                    if(!coupon) return res.status(404).send({status: 404, message: 'This resource not exists'});
 
-    });
-}
+                    //If an error has ocurred
+                    if(err) return res.status(500).send({status: 500, message: `An error has ocurred in server: ${err}`});
 
-//Controller function to get ONE Coupon by CODE
-function getOneCouponByCode(req, res) {
-    Coupon.findOne({ code: req.params.code })
-        .exec((err, coupon) => {
-            //If coupon not exists
-            if(!coupon) return res.status(404).send({status: 404, message: 'This resource not exists'});
+                    return res.status(200).send(coupon);
+                });
+        }
 
-            //If an error has ocurred
-            if(err) return res.status(500).send({status: 500, message: `An error has ocurred in server: ${err}`});
+        //Controller function to get ONE Coupon by USER
+        if(searchby == 'user') {
+            Coupon.find({ "userId": req.query.id })
+                .exec((err, coupons) => {
+                    //If coupons not exists
+                    if(!coupons || coupons.length < 1) return res.status(404).send({status: 404, message: 'This user not have coupons registered'});
 
-            return res.status(200).send(coupon);
-        });
-}
+                    //If an error has ocurred
+                    if(err) return res.status(500).send({status: 500, message: `An error has ocurred in server: ${err}`});
 
-//Controller function to get ONE Coupon by USER
-function getOneCouponByUser(req, res) {
-    Coupon.find({ userId: req.params.user })
-        .exec((err, coupon) => {
-            //If coupon not exists
-            if(!coupon) return res.status(404).send({status: 404, message: 'This resource not exists'});
+                    return res.status(200).send({"coupons": coupons, "count": coupons.length});
+                });
+        }
 
-            //If an error has ocurred
-            if(err) return res.status(500).send({status: 500, message: `An error has ocurred in server: ${err}`});
+    } else {
+        Coupon.find()
+            .exec((err, coupons) => {
+                if(err) return res.status(500).send({status: 500, message: `An error has ocurred in server: ${err}`});
 
-            return res.status(200).send(coupon);
-        });
+                return res.status(200).send({"coupons": coupons, "count": coupons.length});
+            });
+    }
 }
 
 //Function to create ONE Coupon
@@ -104,10 +113,7 @@ function deleteCoupon(req, res) {
 }
 
 module.exports = {
-    getAllCoupons,
-    getOneCouponById,
-    getOneCouponByCode,
-    getOneCouponByUser,
+    getCoupons,
     createCoupon,
     updateCoupon,
     deleteCoupon
