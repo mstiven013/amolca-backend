@@ -145,7 +145,7 @@ async function getBooks(req, res) {
             //If an error has ocurred in server
             if(err) return res.status(500).send({status: 500, message: `An error has ocurred in server: ${err}`})
 
-            return res.status(200).send(books);
+            return res.status(200).send({"books": books, "count": books.length});
         })
     }
 }
