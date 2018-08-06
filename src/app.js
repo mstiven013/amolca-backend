@@ -41,6 +41,7 @@ app.use(API_URL, require('./components/auth/authRoutes'));
 app.use(API_URL + '/books', require('./components/books/booksRoutes'));
 app.use(API_URL + '/coupons', require('./components/coupons/couponsRoutes'));
 app.use(API_URL + '/users', require('./components/users/usersRoutes'));
+app.use(API_URL + '/carts', require('./components/carts/cartsRoutes'));
 app.use(API_URL + '/shops', require('./components/shops/shopsRoutes'));
 
 //Static files

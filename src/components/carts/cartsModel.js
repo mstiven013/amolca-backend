@@ -11,10 +11,14 @@ const CartSchema = new Schema({
         default: moment().add(1, 'M').format("DD-MM-YYYY")
     },
     products:[{
-        id: String,
-        name: String,
-        price: Number,
-        quantity: Number
+        id: {
+            type: String, 
+            required: true
+        },
+        quantity: {
+            type: Number,
+            required: true
+        }
     }],
     registerDate: {
         type: Date,
