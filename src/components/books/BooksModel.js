@@ -42,8 +42,8 @@ const BookSchema = new Schema({
     },
     image: [{
         name: {
-            type: String,
-            default: 'image-not-found.jpg'
+            default: "image-not-found.jpg",
+            type: String
         },
         principal: {
             type: Boolean

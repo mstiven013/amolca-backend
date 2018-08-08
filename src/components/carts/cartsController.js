@@ -76,7 +76,6 @@ async function createCart(req, res) {
 //Controller function to Update ONE cart
 async function updateCart(req, res) {
     let cartId = req.params.id;
-    let update = req.body;
 
     //Generate total with prices and quantities of products in cart
     let totals = 0;
@@ -84,6 +83,8 @@ async function updateCart(req, res) {
         totals += req.body.products[i].price * req.body.products[i].quantity;
     }
     req.body.total = totals;
+
+    let update = req.body;
 
     Cart.findByIdAndUpdate(cartId, update, {new: true} , (err, cart) => {
         //If cart not exists
