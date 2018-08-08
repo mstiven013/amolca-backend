@@ -1,6 +1,7 @@
 'use strict'
 
 const mongoose = require('mongoose');
+const Book = require('../books/BooksModel');
 const Cart = require('./cartsModel');
 
 //Controller function to get Carts
@@ -53,11 +54,15 @@ async function getCart(req, res) {
 //Controller function to create ONE Cart
 async function createCart(req, res) {
 
-    //If not exists request body required
-    if(!req.body.product.id || !req.body.product.quantity) return res.status(400).send({status: 400, message: `Bad request`});
+    //Generate total with prices and quantities of products in cart
+    let totals = 0;
+    for(let i = 0; i < req.body.products.length; i++ ) {
+        totals += req.body.products[i].price * req.body.products[i].quantity;
+    }
+    req.body.total = totals;
 
+    //Save Cart in db
     let cart = new Cart(req.body);
-
     cart.save((err, cartStored) => {
         if(err && err.code == 11000) return res.status(409).send({status: 409, message: `This resource alredy exists: ${err}`});
 
@@ -72,6 +77,13 @@ async function createCart(req, res) {
 async function updateCart(req, res) {
     let cartId = req.params.id;
     let update = req.body;
+
+    //Generate total with prices and quantities of products in cart
+    let totals = 0;
+    for(let i = 0; i < req.body.products.length; i++ ) {
+        totals += req.body.products[i].price * req.body.products[i].quantity;
+    }
+    req.body.total = totals;
 
     Cart.findByIdAndUpdate(cartId, update, {new: true} , (err, cart) => {
         //If cart not exists
