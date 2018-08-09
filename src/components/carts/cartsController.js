@@ -12,13 +12,45 @@ async function getCart(req, res) {
         //Controller function to get cart by ID
         if(req.query.searchby == 'id') {
             Cart.findById(req.query.id, (err, cart) => {
+
+                let pIds = [];
+                let nProducts = [];
+
                 //If an error has ocurred in server
                 if(err) return res.status(500).send({status: 500, message: `An error has ocurred in server: ${err}`});
 
                 //If not exists carts
                 if(!cart) return res.status(404).send({status: 404, message: 'This resource not exists'})
 
-                return res.status(200).send(cart);
+                for(let i = 0; i < cart.products.length; i++) {
+                    pIds.push(cart.products[i].id);
+                }
+
+                Book.find({"_id": { $in: pIds}})
+                    .exec((err, books) => {
+                        //If an error has ocurred in server
+                        if(err) return res.status(500).send({status: 500, message: `An error has ocurred in server: ${err}`});
+
+                        //If not exists books
+                        if(!cart) return res.status(404).send({status: 404, message: 'This resources not exists'})
+
+                        for(let i = 0; i < cart.products.length; i++) {
+                            //Search product with same ID
+                            let sProduct = cart.products.filter(cP => cP.id == books[i]._id);
+
+                            //Set name and image attributes
+                            sProduct[0].set('name',books[i].name,{strict:false})
+                            sProduct[0].set('image',books[i].image,{strict:false})
+
+                            //Add this object to new Products var
+                            nProducts.push(sProduct[0]);
+                        }
+
+                        //Update products cart
+                        cart.products = nProducts;
+
+                        return res.status(200).send(cart);
+                    })
             })
         }
 
@@ -93,7 +125,38 @@ async function updateCart(req, res) {
         //If cart exists but an error has ocurred
         if(err) return res.status(500).send({status: 500, message: `An error has ocurred in server: ${err}`});
 
-        res.status(200).send(cart)
+        let pIds = [];
+        let nProducts = [];
+
+        for(let i = 0; i < cart.products.length; i++) {
+            pIds.push(cart.products[i].id);
+        }
+
+        Book.find({"_id": { $in: pIds}})
+            .exec((err, books) => {
+                //If an error has ocurred in server
+                if(err) return res.status(500).send({status: 500, message: `An error has ocurred in server: ${err}`});
+
+                //If not exists books
+                if(!cart) return res.status(404).send({status: 404, message: 'This resources not exists'})
+
+                for(let i = 0; i < cart.products.length; i++) {
+                    //Search product with same ID
+                    let sProduct = cart.products.filter(cP => cP.id == books[i]._id);
+
+                    //Set name and image attributes
+                    sProduct[0].set('name',books[i].name,{strict:false})
+                    sProduct[0].set('image',books[i].image,{strict:false})
+
+                    //Add this object to new Products var
+                    nProducts.push(sProduct[0]);
+                }
+
+                //Update products cart
+                cart.products = nProducts;
+
+                return res.status(200).send(cart);
+            })
     });
 }
 

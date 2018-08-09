@@ -32,7 +32,7 @@ const CartSchema = new Schema({
     },
     userId: String,
     total: Number
-});
+}, {strict: false});
 
 const Cart = mongoose.model('Cart', CartSchema)
 
