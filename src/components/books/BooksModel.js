@@ -9,7 +9,8 @@ const BookSchema = new Schema({
         value: String
     }],
     author: [{
-        type: String,
+        type: Schema.Types.ObjectId, 
+        ref: 'Author',
         required: true
     }],
     description: String,
@@ -62,7 +63,8 @@ const BookSchema = new Schema({
         required: true
     },
     relatedProducts: [{
-        type: String
+        type: Schema.Types.ObjectId,
+        ref: 'Book'
     }],
     slug: {
         type: String,
@@ -70,10 +72,12 @@ const BookSchema = new Schema({
         unique: true
     },
     specialty: [{
-        type: String
+        type: Schema.Types.ObjectId, 
+        ref: 'Specialty'
     }],
     userId: {
-        type: String,
+        type: Schema.Types.ObjectId,
+        ref: 'User',
         required: true
     },
     variations: [{
