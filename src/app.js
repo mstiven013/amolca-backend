@@ -39,6 +39,7 @@ app.use(function (req, res, next) {
 //Routes
 app.use(API_URL, require('./components/auth/authRoutes'));
 app.use(API_URL + '/books', require('./components/books/booksRoutes'));
+app.use(API_URL + '/specialties', require('./components/specialties/specialtiesRoutes'));
 app.use(API_URL + '/coupons', require('./components/coupons/couponsRoutes'));
 app.use(API_URL + '/users', require('./components/users/usersRoutes'));
 app.use(API_URL + '/carts', require('./components/carts/cartsRoutes'));
