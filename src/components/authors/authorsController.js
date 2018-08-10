@@ -2,6 +2,7 @@
 
 const mongoose = require('mongoose');
 const Author = require('./AuthorsModel');
+const Specialty = require('../specialties/SpecialtiesModel');
 
 async function getAuthors(req, res) {
      //Controller function to get ALL authors if not exists a query
@@ -9,10 +10,16 @@ async function getAuthors(req, res) {
         //If an error has ocurred in server
         if(err) return res.status(500).send({status: 500, message: `An error has ocurred in server: ${err}`})
 
-        //If not exists authors in db
-        if(!authors || authors.length < 1) return res.status(404).send({status: 404, message: `Not exists authors in db`})
+        //Populate for get specialties without optional data
+        Specialty.populate(authors, {path: 'specialty', select: '-registerDate -__v -description -top -parent -childs -metaTags -metaTitle -metaDescription'}, (err, authors) => {
+            //If an error has ocurred in server
+            if(err) return res.status(500).send({status: 500, message: `An error has ocurred in server: ${err}`})
 
-        return res.status(200).send({"authors": authors, "count": authors.length});
+            //If not exists authors in db
+            if(!authors || authors.length < 1) return res.status(404).send({status: 404, message: `Not exists authors in db`})
+
+            return res.status(200).send({"authors": authors, "count": authors.length});
+        });
     })
 }
 
@@ -29,7 +36,16 @@ async function createAuthor(req, res) {
 
         if(err && err.code != 11000) return res.status(500).send({status: 500, message: `An error has ocurred saving this resource: ${err}`});
 
-        return res.status(201).send(authorStored);
+        //Populate for get specialties without optional data
+        Specialty.populate(authorStored, {path: 'specialty', select: '-registerDate -__v -description -top -parent -childs -metaTags -metaTitle -metaDescription'}, (err, authorStored) => {
+            //If an error has ocurred in server
+            if(err) return res.status(500).send({status: 500, message: `An error has ocurred in server: ${err}`})
+
+            //If not exists authorStored in db
+            if(!authorStored) return res.status(404).send({status: 404, message: `Not exists author in db`})
+
+            return res.status(201).send(authorStored);
+        });
     });
 }
 
@@ -63,7 +79,16 @@ async function updateAuthor(req, res) {
         //If author exists but an error has ocurred
         if(err) return res.status(500).send({status: 500, message: `An error has ocurred in server: ${err}`})
 
-        res.status(200).send(author)
+        //Populate for get specialties without optional data
+        Specialty.populate(author, {path: 'specialty', select: '-registerDate -__v -description -top -parent -childs -metaTags -metaTitle -metaDescription'}, (err, author) => {
+            //If an error has ocurred in server
+            if(err) return res.status(500).send({status: 500, message: `An error has ocurred in server: ${err}`})
+
+            //If not exists author in db
+            if(!author) return res.status(404).send({status: 404, message: `Not exists author in db`})
+
+            res.status(200).send(author)
+        });
     });
 }
 

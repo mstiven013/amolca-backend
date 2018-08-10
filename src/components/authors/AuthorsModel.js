@@ -27,7 +27,7 @@ const AuthorSchema = new Schema({
     },
     website: String,
     specialty: [{
-        type: String
+        type: Schema.Types.ObjectId, ref: 'Specialty'
     }]
 })
 
