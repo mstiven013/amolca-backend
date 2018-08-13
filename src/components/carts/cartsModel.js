@@ -23,12 +23,12 @@ const CartSchema = new Schema({
     coupon: Object,
     expiryDate: {
         type: Date,
-        default: moment().add(1, 'M').format("DD-MM-YYYY")
+        default: moment().add(1, 'M')
     },
     products: [ productSchema ],
     registerDate: {
         type: Date,
-        default: moment().format("DD-MM-YYYY")
+        default: moment()
     },
     userId: String,
     total: Number
