@@ -1,6 +1,6 @@
 'use strict'
 
-const mongoose = require('mongoose').set('debug', true);
+const mongoose = require('mongoose');
 const User = require('./UsersModel');
 const Book = require('../books/BooksModel');
 //const TokenService = require('../auth/tokenService');
