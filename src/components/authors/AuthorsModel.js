@@ -18,7 +18,7 @@ const AuthorSchema = new Schema({
     },
     registerDate: {
         type: Date,
-        default: moment().format("DD-MM-YYYY")
+        default: moment()
     },
     slug: {
         type: String,
