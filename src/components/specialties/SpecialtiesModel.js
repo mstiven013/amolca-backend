@@ -17,7 +17,7 @@ const SpecialtySchema = new Schema({
         unique: true
     },
     //Defaults
-    registerDate: { type: Date, default: moment().format("DD-MM-YYYY") },
+    registerDate: { type: Date, default: moment() },
     top: { type: Boolean, default: true },
     //Optionals
     description: String,

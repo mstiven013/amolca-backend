@@ -75,11 +75,11 @@ const BookSchema = new Schema({
         type: Schema.Types.ObjectId, 
         ref: 'Specialty'
     }],
-    userId: {
+    userId: [{
         type: Schema.Types.ObjectId,
         ref: 'User',
         required: true
-    },
+    }],
     variations: [{
         description: String,
         name: String,

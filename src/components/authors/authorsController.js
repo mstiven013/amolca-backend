@@ -3,6 +3,7 @@
 const mongoose = require('mongoose');
 const Author = require('./AuthorsModel');
 const Specialty = require('../specialties/SpecialtiesModel');
+const Book = require('../books/BooksModel');
 
 async function getAuthors(req, res) {
      //Controller function to get ALL authors if not exists a query
@@ -21,6 +22,41 @@ async function getAuthors(req, res) {
             return res.status(200).send({"authors": authors, "count": authors.length});
         });
     })
+}
+
+async function getOneAuthor(req, res) {
+    let authorId = req.params.id;
+
+    Author.findById(authorId, (err, author) => {
+
+        //If author not exists
+        if(!author) return res.status(404).send({status: 404, message: 'This resource not exists'});
+
+        //If an error has ocurred
+        if(err) return res.status(500).send({status: 500, message: `An error has ocurred in server: ${err}`});
+
+        return res.status(200).send(author);
+
+    });
+}
+
+//Controller function to get books by author
+async function getBooksByAuthor(req, res) {
+    let authorId = req.params.id;
+
+    Book.find({author: authorId})
+        .populate({ path: 'relatedProducts', select: '-__v -relatedProducts -specialty -publicationYear -userId -attributes -variations -volume -inventory.individualSale -inventory.allowReservations -inventory.isbn'})
+        .populate({ path: 'userId', select: '-__v -signupDate -products -posts -role '})
+        .populate({ path: 'author', select: '-__v -registerDate -specialty '})
+        .exec((err, books) => {
+            //If book not exists
+            if(!books || books.length < 1) return res.status(404).send({status: 404, message: 'This author not have books registered'});
+
+            //If an error has ocurred
+            if(err) return res.status(500).send({status: 500, message: `An error has ocurred in server: ${err}`});
+
+            return res.status(200).send({"books": books, "count": books.length});
+        });
 }
 
 //Controller function to create an author
@@ -94,7 +130,9 @@ async function updateAuthor(req, res) {
 
 module.exports = {
     getAuthors,
+    getOneAuthor,
+    getBooksByAuthor,
     createAuthor,
     deleteAuthor,
-    updateAuthor    
+    updateAuthor
 }

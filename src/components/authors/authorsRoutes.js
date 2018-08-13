@@ -11,6 +11,12 @@ const auth = require('../auth/authMiddleware');
 //Get all Authors
 router.get('/', AuthorCtrl.getAuthors);
 
+//Get one author
+router.get('/:id', AuthorCtrl.getOneAuthor);
+
+//Get books by Author
+router.get('/:id/books', AuthorCtrl.getBooksByAuthor);
+
 //Create Author
 router.post('/', AuthorCtrl.createAuthor);
 

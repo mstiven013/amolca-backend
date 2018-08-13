@@ -9,15 +9,18 @@ const UserCtrl = require('./usersController');
 const auth = require('../auth/authMiddleware');
 
 //Get all users
-router.get('/', auth.isAuth, UserCtrl.getAllUsers);
+router.get('/', UserCtrl.getAllUsers);
 
 //Get an user
-router.get('/:id', auth.isAuth, UserCtrl.getOneUser);
+router.get('/:id', UserCtrl.getOneUser);
+
+//Get books by user Id
+router.get('/:id/books',  UserCtrl.getBooksByUser)
 
 //Delete an user
-router.delete('/:id', auth.isAuth, UserCtrl.deleteUser);
+router.delete('/:id', UserCtrl.deleteUser);
 
 //Update user
-router.put('/:id', auth.isAuth, UserCtrl.updateUser);
+router.put('/:id', UserCtrl.updateUser);
 
 module.exports = router;

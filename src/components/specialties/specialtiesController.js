@@ -2,6 +2,7 @@
 
 const mongoose = require('mongoose')
 const Specialty = require('./SpecialtiesModel')
+const Book = require('../books/BooksModel');
 
 async function getSpecialties(req, res) {
     //Controller function to get ALL specialties if not exists a query
@@ -20,6 +21,43 @@ async function getSpecialties(req, res) {
             return res.status(200).send({"specialties": specialties, "count": specialties.length});
         });
     })
+}
+
+//COntroller function to get One Specialty by Id
+async function getSpecialtiesById(req, res) {
+    let specialtyId = req.params.id;
+
+    Specialty.findById(specialtyId)
+        .populate({path: 'parent childs', select: '-registerDate -__v -description -top -parent -childs -metaTags -metaTitle -metaDescription'})
+        .exec((err, specialty) => {
+            //If specialty not exists
+            if(!specialty) return res.status(404).send({status: 404, message: 'This resource not exists'});
+
+            //If an error has ocurred
+            if(err) return res.status(500).send({status: 500, message: `An error has ocurred in server: ${err}`});
+
+            return res.status(200).send(specialty);
+
+        });
+}
+
+//Controller function to get Books by Specialties
+async function getBooksBySpecialty(req, res) {
+    let specialtyId = req.params.id;
+
+    Book.find({specialty: specialtyId})
+        .populate({ path: 'relatedProducts', select: '-__v -relatedProducts -specialty -publicationYear -userId -attributes -variations -volume -inventory.individualSale -inventory.allowReservations -inventory.isbn'})
+        .populate({ path: 'userId', select: '-__v -signupDate -products -posts -role '})
+        .populate({ path: 'author', select: '-__v -registerDate -specialty '})
+        .exec((err, books) => {
+            //If book not exists
+            if(!books || books.length < 1) return res.status(404).send({status: 404, message: 'This specialty not have books registered'});
+
+            //If an error has ocurred
+            if(err) return res.status(500).send({status: 500, message: `An error has ocurred in server: ${err}`});
+
+            return res.status(200).send(books);
+        });
 }
 
 async function createSpecialty(req, res) {
@@ -85,6 +123,8 @@ async function deleteSpecialty(req, res) {
 
 module.exports = {
     getSpecialties,
+    getSpecialtiesById,
+    getBooksBySpecialty,
     createSpecialty,
     updateSpecialty,
     deleteSpecialty
