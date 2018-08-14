@@ -43,6 +43,7 @@ app.use(API_URL + '/specialties', require('./components/specialties/specialtiesR
 app.use(API_URL + '/coupons', require('./components/coupons/couponsRoutes'));
 app.use(API_URL + '/users', require('./components/users/usersRoutes'));
 app.use(API_URL + '/carts', require('./components/carts/cartsRoutes'));
+app.use(API_URL + '/orders', require('./components/orders/ordersRoutes'));
 app.use(API_URL + '/shops', require('./components/shops/shopsRoutes'));
 app.use(API_URL + '/authors', require('./components/authors/authorsRoutes'));
 

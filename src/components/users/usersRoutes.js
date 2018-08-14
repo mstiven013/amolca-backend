@@ -17,6 +17,9 @@ router.get('/:id', UserCtrl.getOneUser);
 //Get books by user Id
 router.get('/:id/books',  UserCtrl.getBooksByUser)
 
+//Get orders by user Id
+router.get('/:id/orders',  UserCtrl.getOrdersByUser)
+
 //Delete an user
 router.delete('/:id', UserCtrl.deleteUser);
 

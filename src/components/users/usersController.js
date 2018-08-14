@@ -3,6 +3,7 @@
 const mongoose = require('mongoose');
 const User = require('./UsersModel');
 const Book = require('../books/BooksModel');
+const Order = require('../orders/OrdersModel');
 //const TokenService = require('../auth/tokenService');
 
 //Controller to get ALL users
@@ -43,6 +44,30 @@ async function getBooksByUser(req, res) {
             if(!books || books.length < 1) return res.status(404).send({status: 404, message: 'Not exists books registered by this user'});
 
             return res.status(200).send(books);
+        });
+}
+
+//Controller function to get ONE Book by USER ID
+async function getOrdersByUser(req, res) {
+    let id = req.params.id;
+
+    Order.findOne({"userId" : id})
+        .populate({ 
+            path: 'cart.products.id', 
+            select: '-__v -relatedProducts -specialty -publicationYear -userId -attributes -variations -volume -inventory.individualSale -inventory.allowReservations -inventory.isbn'
+        })
+        .populate({
+            path: 'userId', 
+            select: '-__v -signupDate -products -posts -role'
+        })
+        .exec((err, orders) => {
+            //If an error has ocurred
+            if(err) return res.status(500).send({status: 500, message: `An error has ocurred in server: ${err}`});
+
+            //If orders not exists
+            if(!orders || orders.length < 1) return res.status(404).send({status: 404, message: 'Not exists orders registered by this user'});
+
+            return res.status(200).send(orders);
         });
 }
 
@@ -101,6 +126,7 @@ module.exports = {
     getAllUsers,
     getOneUser,
     getBooksByUser,
+    getOrdersByUser,
     deleteUser,
     updateUser
 }
