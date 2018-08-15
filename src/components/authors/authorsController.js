@@ -19,7 +19,7 @@ async function getAuthors(req, res) {
             //If not exists authors in db
             if(!authors || authors.length < 1) return res.status(404).send({status: 404, message: `Not exists authors in db`})
 
-            return res.status(200).send({"authors": authors, "count": authors.length});
+            return res.status(200).send(authors);
         });
     })
 }
@@ -55,7 +55,7 @@ async function getBooksByAuthor(req, res) {
             //If an error has ocurred
             if(err) return res.status(500).send({status: 500, message: `An error has ocurred in server: ${err}`});
 
-            return res.status(200).send({"books": books, "count": books.length});
+            return res.status(200).send(books);
         });
 }
 
