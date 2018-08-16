@@ -6,7 +6,7 @@ const Book = require('./BooksModel');
 //"Related Products" Populate var
 const populateRelatedProducts = { 
     path: 'relatedProducts', 
-    select: '-__v -relatedProducts -specialty -publicationYear -userId -attributes -variations -volume -inventory.individualSale -inventory.allowReservations -inventory.isbn'
+    select: '-__v -relatedProducts -specialty -publicationYear -userId -attributes -variations -volume -inventory.individualSale -inventory.allowReservations -inventory.isbn -metaTitle -metaDescription -metaTags'
 };
 
 //"User" Populate var
@@ -21,17 +21,44 @@ const populateAuthor = {
     select: '-__v -registerDate -specialty'
 };
 
+const populateSpecialty = {
+    path: 'specialty',
+    select: '-__v -registerDate -metaTitle -metaDescription -metaTags -childs -parent -image -description -top'
+}
+
 //Controller function to get ALL Books
 async function getAllBooks(req, res) {
+    let limit = 100000;
+    let sortKey = 'name';
+    let sortOrder = 1;
+
+    if(req.query.limit) {
+        limit = parseInt(req.query.limit);
+    }
+    if(req.query.orderby) {
+        sortKey = req.query.orderby;
+    }
+    if(req.query.order) {
+        sortOrder = req.query.order;
+    }
+
+    let sort = {[sortKey]: sortOrder};
 
     //Controller function to get ALL Books if not exists a query
     Book.find()
         .populate(populateRelatedProducts)
         .populate(populateUserId)
         .populate(populateAuthor)
+        .populate(populateSpecialty)
+        .limit(limit)
+        .sort(sort)
         .exec((err, books) => {
+            console.log(sort)
             //If an error has ocurred in server
             if(err) return res.status(500).send({status: 500, message: `An error has ocurred in server: ${err}`})
+
+            //If not exists books in db
+            if(!books || books.length < 1) return res.status(404).send({status: 404, message: `Not exists books in db`})
 
             return res.status(200).send(books);
         })
@@ -45,6 +72,7 @@ async function getBooksById(req, res) {
         .populate(populateRelatedProducts)
         .populate(populateUserId)
         .populate(populateAuthor)
+        .populate(populateSpecialty)
         .exec((err, book) => {
             //If book not exists
             if(!book) return res.status(404).send({status: 404, message: 'This resource not exists'});
@@ -65,6 +93,7 @@ async function getBooksBySlug(req, res) {
         .populate(populateRelatedProducts)
         .populate(populateUserId)
         .populate(populateAuthor)
+        .populate(populateSpecialty)
         .exec((err, book) => {
             //If book not exists
             if(!book) return res.status(404).send({status: 404, message: 'This resource not exists'});
@@ -84,6 +113,7 @@ async function getBooksByIsbn(req, res) {
         .populate(populateRelatedProducts)
         .populate(populateUserId)
         .populate(populateAuthor)
+        .populate(populateSpecialty)
         .exec((err, books) => {
             //If book not exists
             if(!books) return res.status(404).send({status: 404, message: 'This resource not exists'});
@@ -99,10 +129,29 @@ async function getBooksByIsbn(req, res) {
 async function getBooksByPublication(req, res) {
     let year = req.params.year;
 
+    let limit = 100000;
+    let sortKey = 'name';
+    let sortOrder = 1;
+
+    if(req.query.limit) {
+        limit = parseInt(req.query.limit);
+    }
+    if(req.query.orderby) {
+        sortKey = req.query.orderby;
+    }
+    if(req.query.order) {
+        sortOrder = req.query.order;
+    }
+
+    let sort = {[sortKey]: sortOrder};
+
     Book.find({"publicationYear" : year})
         .populate(populateRelatedProducts)
         .populate(populateUserId)
         .populate(populateAuthor)
+        .populate(populateSpecialty)
+        .limit(limit)
+        .sort(sort)
         .exec((err, books) => {
             //If book not exists
             if(!books || books.length < 1) return res.status(404).send({status: 404, message: 'Not exists books publicated in this year'});
@@ -117,11 +166,29 @@ async function getBooksByPublication(req, res) {
 //Controller function to get Books by state
 async function getBooksByState(req, res) {
     let state = req.params.state.toUpperCase();
+    let limit = 100000;
+    let sortKey = 'name';
+    let sortOrder = 1;
+
+    if(req.query.limit) {
+        limit = parseInt(req.query.limit);
+    }
+    if(req.query.orderby) {
+        sortKey = req.query.orderby;
+    }
+    if(req.query.order) {
+        sortOrder = req.query.order;
+    }
+
+    let sort = {[sortKey]: sortOrder};
 
     Book.find({"inventory.state" : state})
         .populate(populateRelatedProducts)
         .populate(populateUserId)
         .populate(populateAuthor)
+        .populate(populateSpecialty)
+        .limit(limit)
+        .sort(sort)
         .exec((err, books) => {
             //If book not exists
             if(!books || books.length < 1) return res.status(404).send({status: 404, message: 'Not exists books with this inventory state'});
@@ -149,7 +216,7 @@ async function createBook(req, res) {
         if(err && err.code != 11000) return res.status(500).send({status: 500, message: `An error has ocurred saving this resource: ${err}`});
 
         //Populate and return book stored
-        Book.populate(bookStored, [populateRelatedProducts, populateUserId, populateAuthor], (err, bookStored) => {
+        Book.populate(bookStored, [populateRelatedProducts, populateUserId, populateAuthor, populateSpecialty], (err, bookStored) => {
             //If an error has ocurred
             if(err) return res.status(500).send({status: 500, message: `An error has ocurred saving this resource: ${err}`});
 
@@ -162,15 +229,20 @@ async function updateBook(req, res) {
     let bookId = req.params.id;
     let update = req.body;
 
-    Book.findByIdAndUpdate(bookId, update, {new: true} , (err, book) => {
-        //If book not exists
-        if(!book) return res.status(404).send({status: 404, message: 'This resource not exists'})
+    Book.findByIdAndUpdate(bookId, update, {new: true})
+        .populate(populateRelatedProducts)
+        .populate(populateUserId)
+        .populate(populateAuthor)
+        .populate(populateSpecialty)
+        .exec((err, book) => {
+            //If book not exists
+            if(!book) return res.status(404).send({status: 404, message: 'This resource not exists'})
 
-        //If book exists but an error has ocurred
-        if(err) return res.status(500).send({status: 500, message: `An error has ocurred in server: ${err}`})
+            //If book exists but an error has ocurred
+            if(err) return res.status(500).send({status: 500, message: `An error has ocurred in server: ${err}`})
 
-        res.status(200).send(book)
-    });
+            res.status(200).send(book)
+        });
 }
 
 //Controller function to delete one Book

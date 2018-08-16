@@ -3,6 +3,17 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
+const countrySubSchema = new Schema({
+    name: {
+        type: String,
+        required: true
+    },
+    price: {
+        type: Number,
+        default: 0
+    }
+}, { _id: false });
+
 const BookSchema = new Schema({
     attributes: [{
         id: String,
@@ -54,10 +65,10 @@ const BookSchema = new Schema({
         type: String,
         required: true
     },
-    price: {
-        type: Number,
-        default: 0
-    },
+    country: [{
+        type: countrySubSchema,
+        required: true
+    }],
     publicationYear: {
         type: Number,
         required: true
@@ -112,7 +123,11 @@ const BookSchema = new Schema({
     volume: {
         type: Number,
         default: 1
-    }
+    },
+    //Meta tags
+    metaTitle: String,
+    metaDescription: String,
+    metaTags: [{ type: String }]
 });
 
 const Book = mongoose.model('Book', BookSchema)
