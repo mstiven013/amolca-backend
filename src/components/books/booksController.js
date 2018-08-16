@@ -6,7 +6,7 @@ const Book = require('./BooksModel');
 //"Related Products" Populate var
 const populateRelatedProducts = { 
     path: 'relatedProducts', 
-    select: '-__v -relatedProducts -specialty -publicationYear -userId -attributes -variations -volume -inventory.individualSale -inventory.allowReservations -inventory.isbn -metaTitle -metaDescription -metaTags'
+    select: '-__v -relatedProducts -specialty -publicationYear -userId -attributes -variations -volume -inventory.individualSale -inventory.allowReservations -isbn -metaTitle -metaDescription -metaTags'
 };
 
 //"User" Populate var
@@ -109,7 +109,7 @@ async function getBooksBySlug(req, res) {
 async function getBooksByIsbn(req, res) {
     let isbn = req.params.isbn;
 
-    Book.findOne({"inventory.isbn" : isbn})
+    Book.findOne({"isbn" : isbn})
         .populate(populateRelatedProducts)
         .populate(populateUserId)
         .populate(populateAuthor)

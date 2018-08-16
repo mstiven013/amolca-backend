@@ -4,14 +4,18 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const countrySubSchema = new Schema({
-    name: {
-        type: String,
-        required: true
-    },
-    price: {
-        type: Number,
-        default: 0
-    }
+    name: { type: String, required: true },
+    price: { type: Number, default: 0 },
+    quantity: { type: Number, default: 0 },
+    state: { type: String, default: "STOCK", enum: ["RESERVED", "SPENT", "STOCK"] },
+    individualSale: { type: Boolean, default: false },
+    allowReservations: { type: Boolean, default: false },
+    reservationNote: { type: String }
+}, { _id: false });
+
+const imageSubSchema = new Schema({
+    name: { type: String, default: "image-not-found.jpg" },
+    principal: Boolean
 }, { _id: false });
 
 const BookSchema = new Schema({
@@ -26,46 +30,17 @@ const BookSchema = new Schema({
     }],
     description: String,
     index: String,
-    inventory: {
-        quantity: { 
-            type: Number,
-            default: 0
-        },
-        isbn: {
-            type: String,
-            unique: true
-        },
-        state: {
-            type: String,
-            default: "STOCK",
-            enum: ["RESERVED", "SPENT", "STOCK"]
-        },
-        individualSale: {
-            type: Boolean,
-            default: false
-        },
-        allowReservations: {
-            type: Boolean,
-            default: false
-        },
-        reservationNote: {
-            type: String
-        }
+    isbn: {
+        type: String,
+        required: true,
+        unique: true
     },
-    image: [{
-        name: {
-            default: "image-not-found.jpg",
-            type: String
-        },
-        principal: {
-            type: Boolean
-        }
-    }],
+    image: [{ type: imageSubSchema  }],
     name: {
         type: String,
         required: true
     },
-    country: [{
+    countries: [{
         type: countrySubSchema,
         required: true
     }],
