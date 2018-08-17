@@ -51,7 +51,11 @@ app.use(API_URL + '/authors', require('./components/authors/authorsRoutes'));
 app.use(express.static(__dirname + '/public'));
 
 //Run DB host and App
-mongoose.connect('mongodb://localhost:27017/amolca-store', (err, res) => {  
+const dbPass = encodeURIComponent('AmolcaColombia%2018');
+//const mdbUri = 'mongodb://localhost:27017/amolca-store';
+const mdbUri = `mongodb+srv://amolca:${dbPass}@amolcaweb2018-pxfid.mongodb.net/test`;
+
+mongoose.connect( mdbUri, { auth: { user: 'amolca', password: 'AmolcaColombia%2018' }}, (err, client) => {  
     if(err) {
         return console.log('DB connection error.');
     }
