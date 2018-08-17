@@ -52,10 +52,12 @@ app.use(express.static(__dirname + '/public'));
 
 //Run DB host and App
 const dbPass = encodeURIComponent('AmolcaColombia%2018');
-//const mdbUri = 'mongodb://localhost:27017/amolca-store';
-const mdbUri = `mongodb+srv://amolca:${dbPass}@amolcaweb2018-pxfid.mongodb.net/test`;
+const mdbUri = 'mongodb://localhost:27017/amolca-store';
+const dbAuth = {};
+//const mdbUri = `mongodb+srv://amolca:${dbPass}@amolcaweb2018-pxfid.mongodb.net/test`;
+//const dbAuth = { auth: { user: 'amolca', password: 'AmolcaColombia%2018' }};
 
-mongoose.connect( mdbUri, { auth: { user: 'amolca', password: 'AmolcaColombia%2018' }}, (err, client) => {  
+mongoose.connect( mdbUri, dbAuth, (err, client) => {  
     if(err) {
         return console.log('DB connection error.');
     }
