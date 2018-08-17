@@ -18,7 +18,7 @@ async function getSpecialties(req, res) {
             //If not exists specialties in db
             if(!specialties || specialties.length < 1) return res.status(404).send({status: 404, message: `Not exists specialties in db`})
             
-            return res.status(200).send({"specialties": specialties, "count": specialties.length});
+            return res.status(200).send(specialties);
         });
     })
 }
