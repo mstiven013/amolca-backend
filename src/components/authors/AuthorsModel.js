@@ -28,7 +28,10 @@ const AuthorSchema = new Schema({
     website: String,
     specialty: [{
         type: Schema.Types.ObjectId, ref: 'Specialty'
-    }]
+    }],
+    metaTitle: String,
+    metaDescription: String,
+    metaTags: [{ type: String }]
 })
 
 const Author = mongoose.model('Author', AuthorSchema)

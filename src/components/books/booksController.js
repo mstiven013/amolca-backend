@@ -18,7 +18,7 @@ const populateUserId = {
 //"Author" Populate var
 const populateAuthor = { 
     path: 'author', 
-    select: '-__v -registerDate -specialty'
+    select: '-__v -registerDate -specialty -metaTitle -metaDescription -metaTags'
 };
 
 const populateSpecialty = {
