@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const User = require('./UsersModel');
 const Book = require('../books/BooksModel');
 const Order = require('../orders/OrdersModel');
+const Post = require('../posts/PostsModel');
 //const TokenService = require('../auth/tokenService');
 
 //Controller to get ALL users
@@ -71,6 +72,26 @@ async function getOrdersByUser(req, res) {
         });
 }
 
+//Controller function to get posts by User Id
+async function getPostsByUser(req, res) {
+    let id = req.params.id;
+
+    Post.findOne({"userId" : id})
+        .populate({
+            path: 'userId', 
+            select: '-__v -signupDate -products -posts -role'
+        })
+        .exec((err, posts) => {
+            //If an error has ocurred
+            if(err) return res.status(500).send({status: 500, message: `An error has ocurred in server: ${err}`});
+
+            //If posts not exists
+            if(!posts || posts.length < 1) return res.status(404).send({status: 404, message: 'Not exists posts registered by this user'});
+
+            return res.status(200).send(posts);
+        });
+}
+
 //Controller to delete one user
 async function deleteUser(req, res) {
     if(req.headers["content-type"] !== 'application/json'){
@@ -125,6 +146,7 @@ async function updateUser() {
 module.exports = {
     getAllUsers,
     getOneUser,
+    getPostsByUser,
     getBooksByUser,
     getOrdersByUser,
     deleteUser,

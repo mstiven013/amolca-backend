@@ -14,6 +14,9 @@ router.get('/', UserCtrl.getAllUsers);
 //Get an user
 router.get('/:id', UserCtrl.getOneUser);
 
+//Get posts by user Id
+router.get('/:id/posts',  UserCtrl.getPostsByUser)
+
 //Get books by user Id
 router.get('/:id/books',  UserCtrl.getBooksByUser)
 
