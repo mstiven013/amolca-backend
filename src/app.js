@@ -12,7 +12,6 @@ const app = express();
 
 //Settings
 const API_URL = config.api + config.version;
-app.set('port', process.env.PORT || 3000);
 
 //Middlewares
 const auth = require('./components/auth/authMiddleware');
@@ -51,14 +50,7 @@ app.use(API_URL + '/posts', require('./components/posts/postsRoutes'));
 //Static files
 app.use(express.static(__dirname + '/public'));
 
-//Run DB host and App
-const dbPass = encodeURIComponent('AmolcaColombia%2018');
-const mdbUri = 'mongodb://localhost:27017/amolca-store';
-const dbAuth = {};
-//const mdbUri = `mongodb+srv://amolca:${dbPass}@amolcaweb2018-pxfid.mongodb.net/test`;
-//const dbAuth = { auth: { user: 'amolca', password: 'AmolcaColombia%2018' }};
-
-mongoose.connect( mdbUri, dbAuth, (err, client) => {  
+mongoose.connect( config.db, config.dbAuth, (err, client) => {  
     if(err) {
         return console.log('DB connection error.');
     }
