@@ -56,7 +56,7 @@ mongoose.connect( config.db, config.dbAuth, (err, client) => {
     }
     console.log('Mongo DB is connected');
 
-    app.listen(app.get('port'), () => {
-        console.log('Server on port:', app.get('port'));
+    app.listen(config.port, () => {
+        console.log('Server on port:', config.port);
     });
 })
