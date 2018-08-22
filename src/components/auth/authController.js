@@ -32,7 +32,7 @@ async function signUp(req, res) {
         }
 
         //Send status and user stored
-        res.status(201).send({'access_token': TokenService.createToken(user), user});
+        res.status(201).send({'access_token': TokenService.createToken(user), user: user});
     });
 }
 

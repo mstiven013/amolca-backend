@@ -24,7 +24,7 @@ async function getAuthors(req, res) {
     })
 }
 
-async function getOneAuthor(req, res) {
+async function getAuthorsById(req, res) {
     let authorId = req.params.id;
 
     Author.findById(authorId, (err, author) => {
@@ -38,6 +38,22 @@ async function getOneAuthor(req, res) {
         return res.status(200).send(author);
 
     });
+}
+
+//Controller function to get one book by Slug
+async function getAuthorsBySlug(req, res) {
+    let authorSlug = req.params.slug;
+
+    Author.findOne({ slug: authorSlug })
+        .exec((err, author) => {
+            //If author not exists
+            if(!author) return res.status(404).send({status: 404, message: 'This resource not exists'});
+
+            //If an error has ocurred
+            if(err) return res.status(500).send({status: 500, message: `An error has ocurred in server: ${err}`});
+
+            return res.status(200).send(author);
+        });
 }
 
 //Controller function to get books by author
@@ -130,7 +146,8 @@ async function updateAuthor(req, res) {
 
 module.exports = {
     getAuthors,
-    getOneAuthor,
+    getAuthorsById,
+    getAuthorsBySlug,
     getBooksByAuthor,
     createAuthor,
     deleteAuthor,
