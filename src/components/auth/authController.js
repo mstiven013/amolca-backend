@@ -3,6 +3,8 @@
 const mongoose = require('mongoose');
 const User = require('../users/UsersModel');
 const TokenService = require('./tokenService');
+const nodemailer = require('nodemailer');
+const xoauth2 = require('xoauth2');
 const bcrypt = require('bcrypt-nodejs');
 
 //Controller register an User
@@ -31,13 +33,47 @@ async function signUp(req, res) {
             });
         }
 
-        //Send status and user stored
-        res.status(201).send({'access_token': TokenService.createToken(user), user: user});
+        const smtpTransport = nodemailer.createTransport({
+            service: 'gmail',
+            host: 'smtp.gmail.com',
+            port: 465,
+            secure: true,
+            auth: {
+                user: 'mstiven013@gmail.com',
+                pass: 'SoloNacional1947'
+            }
+        });
+    
+        const mailOptions = {
+            from: `Amolca Colombia <info@amolca.com.co>`,
+            to: userStored.email,
+            subject: `¡Hola, ${userStored.name}! Te damos la bienvenida a Amolca`,
+            text: `¡Hola, ${userStored.name}! Bienvenido a Amolca, esperamos nuestra relación sea feliz y duradera.`,
+            html: `
+                <h2 style="font-family: 'Arial'; font-weight: bold; text-align: center;">¡Hola, ${userStored.name}!</h2>
+                <p style="font-family: 'Arial'; text-align: center;">Bienvenido a Amolca, esperamos nuestra relación sea feliz y duradera.</p>
+            `
+        }
+    
+        smtpTransport.sendMail(mailOptions, (err, response) => {
+    
+            if(err) {
+                console.log('Error enviando el email') 
+                console.log(err)
+                return res.status(500).send({ status: 500, message: `An error has ocurred sending the message to your email` });
+            } else {
+                console.log('Enviado correctamente')
+                //Send status and user stored
+                return res.status(201).send({'access_token': TokenService.createToken(user), user: user});
+            }
+    
+        });
+
     });
 }
 
 //Controller to login user
-async function signIn(req, res) {
+function signIn(req, res) {
     
     //console.log(req.body);
 
