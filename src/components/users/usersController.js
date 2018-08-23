@@ -122,13 +122,6 @@ async function deleteUser(req, res) {
 
 //Controller to update an user
 async function updateUser() {
-    if(req.headers["content-type"] !== 'application/json'){
-        return res.status(500).send({
-            status: 500,
-            message: 'Server not supported the Content-Type header sended in this request'
-        })
-    }
-
     let userId = req.params.id;
     let update = req.body;
 

@@ -50,8 +50,30 @@ async function signUp(req, res) {
             subject: `¡Hola, ${userStored.name}! Te damos la bienvenida a Amolca`,
             text: `¡Hola, ${userStored.name}! Bienvenido a Amolca, esperamos nuestra relación sea feliz y duradera.`,
             html: `
-                <h2 style="font-family: 'Arial'; font-weight: bold; text-align: center;">¡Hola, ${userStored.name}!</h2>
-                <p style="font-family: 'Arial'; text-align: center;">Bienvenido a Amolca, esperamos nuestra relación sea feliz y duradera.</p>
+            <div style="width: 100%; background-color: #f2f2f2; padding-bottom: 20px; padding-top: 20px;">
+                <div style="background-color: #fff; border-radius: 10px; overflow: hidden; -webkit-box-sizing: border-box; -moz-box-sizing: border-box; -ms-box-sizing: border-box; box-sizing: border-box;  margin-left: auto; margin-right: auto; width: 600px;">
+                    <!--Header email-->
+                    <div style="background-color: #f9f9f9; border-bottom: 1px solid #ccc; border-top-left-radius: 10px; border-top-right-radius: 10px; padding: 30px 50px; text-align: center;">
+                        <a href="http://www.amolca.com/" target="_blank"><img src="http://amolca.webussines.com/assets/img/common/logo.png" width="auto" height="80px" alt=""></a>
+                    </div>
+                    <!--Body email-->
+                    <div style="color: #AAAAAA; font-size: 16px; line-height: normal; padding: 50px; font-family: Arial;">
+                        <p style="font-size: 20px; font-weight: bold; margin-top: 0px;">¡Hola, <span style="color: #00396F;">${userStored.name}</span>!</p>
+                        <p>Te queremos dar la bienvenida a nuestra familia y decirte que estaremos siempre pendientes de brindarte la atención que mereces.</p>
+                        <p>Si tienes dudas, problemas, inquietudes o sugerencias no dudes en contactarnos y con mucho gusto responderemos a todas tus solicitudes.</p>
+                    </div>
+                    <!--Footer email-->
+                    <div style="background-color: #00396F; color: #FFF; font-family: Arial; padding: 30px; text-align: center;">
+                        <p style="margin: 0px;">
+                            <a href="http://www.amolca.com" target="_blank" style="color: #FFF;">Amolca Editorial médica y odontológica</a>
+                        </p>
+                        <p style="color: #FFF; margin-bottom: 5px;">©2018</p>
+                        <p style="margin: 0px;">
+                            <a style="color: #FFF;">Condiciones de servicio & Política de privacidad</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
             `
         }
     
