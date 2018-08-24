@@ -9,7 +9,7 @@ const ShipBillSchema = new Schema({
     name: { type: String, required: true },
     country: { type: String, required: true },
     state: { type: String, required: true },
-    direction: { type: String, required: true },
+    address: { type: String, required: true },
     phone: { type: Number, required: true },
     aditional: { type: String }
 }, { _id: false });

@@ -41,6 +41,23 @@ async function getSpecialtiesById(req, res) {
         });
 }
 
+//Controller function to get one Post by Slug
+async function getSpecialtiesBySlug(req, res) {
+    let specialtySlug = req.params.slug;
+
+    Specialty.findOne({ slug: specialtySlug })
+        .populate({path: 'parent childs', select: '-registerDate -__v -description -top -parent -childs -metaTags -metaTitle -metaDescription'})
+        .exec((err, specialty) => {
+            //If specialty not exists
+            if(!specialty) return res.status(404).send({status: 404, message: 'This resource not exists'});
+
+            //If an error has ocurred
+            if(err) return res.status(500).send({status: 500, message: `An error has ocurred in server: ${err}`});
+
+            return res.status(200).send(specialty);
+        });
+}
+
 //Controller function to get Books by Specialties
 async function getBooksBySpecialty(req, res) {
     let specialtyId = req.params.id;
@@ -62,7 +79,7 @@ async function getBooksBySpecialty(req, res) {
 
 async function createSpecialty(req, res) {
     //If not has required fields
-    if(!req.body.name || !req.body.slug) {
+    if(!req.body.title || !req.body.slug) {
         return res.status(400).send({status: 400, message: 'Bad request'})
     }
 
@@ -124,6 +141,7 @@ async function deleteSpecialty(req, res) {
 module.exports = {
     getSpecialties,
     getSpecialtiesById,
+    getSpecialtiesBySlug,
     getBooksBySpecialty,
     createSpecialty,
     updateSpecialty,

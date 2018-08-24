@@ -7,7 +7,7 @@ const Schema = mongoose.Schema;
 
 const SpecialtySchema = new Schema({
     //Required's
-    name: {
+    title: {
         type: String,
         required: true
     },

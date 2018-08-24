@@ -14,6 +14,9 @@ router.get('/', SpecialtiesCtrl.getSpecialties);
 //Get one Specialty by ID
 router.get('/:id', SpecialtiesCtrl.getSpecialtiesById)
 
+//Get one Specialty by slug
+router.get('/slug/:slug', SpecialtiesCtrl.getSpecialtiesBySlug)
+
 //Get books by Specialty
 router.get('/:id/books', SpecialtiesCtrl.getBooksBySpecialty)
 
