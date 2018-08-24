@@ -1,0 +1,51 @@
+//Medicina
+{
+	"title": "Medicina", 
+	"slug": "medicina", 
+	"image": "medicina.png"
+}
+
+	{ "title": "Anatomía", "slug": "anatomia", "image": "anatomia.png", "parent": "5b8077346f8f2922dc70a2af"},
+	{ "title": "Enfermería", "slug": "enfermeria", "image": "enfermeria.png", "parent": "5b8077346f8f2922dc70a2af"},
+	{ "title": "Laboratorio", "slug": "laboratorio", "image": "laboratorio.png", "parent": "5b8077346f8f2922dc70a2af"},
+	{ "title": "Ginecología", "slug": "ginecologia", "image": "ginecologia.png", "parent": "5b8077346f8f2922dc70a2af"},
+	{ "title": "Anestesiología", "slug": "anestesiologia", "image": "anestesiologia.png", "parent": "5b8077346f8f2922dc70a2af"},
+	{ "title": "Cardiología", "slug": "cardiologia", "image": "cardiologia.png", "parent": "5b8077346f8f2922dc70a2af"},
+	{ "title": "Cirugía plástica", "slug": "cirugia-plastica", "image": "cirugia-plastica.png", "parent": "5b8077346f8f2922dc70a2af"},
+	{ "title": "Pediatría", "slug": "pediatria", "image": "pediatria.png", "parent": "5b8077346f8f2922dc70a2af"},
+	{ "title": "Imagenología", "slug": "imagenologia", "image": "imagenologia.png", "parent": "5b8077346f8f2922dc70a2af"},
+	{ "title": "Urología", "slug": "urologia", "image": "urologia.png", "parent": "5b8077346f8f2922dc70a2af"},
+	{ "title": "Cirugía", "slug": "cirugia", "image": "cirugia.png", "parent": "5b8077346f8f2922dc70a2af"},
+	{ "title": "Neurología", "slug": "neurologia", "image": "neurologia.png", "parent": "5b8077346f8f2922dc70a2af"},
+	{ "title": "Gastroenterología", "slug": "gastroenterologia", "image": "gastroenterologia.png", "parent": "5b8077346f8f2922dc70a2af"},
+	{ "title": "Ortopedia", "slug": "ortopedia", "image": "ortopedia.png", "parent": "5b8077346f8f2922dc70a2af"},
+	{ "title": "Medicina Estética", "slug": "medicina-estetica", "image": "medicina-estetica.png", "parent": "5b8077346f8f2922dc70a2af"},
+	{ "title": "Medicina General", "slug": "medicina-general", "image": "medicina-general.png", "parent": "5b8077346f8f2922dc70a2af"},
+	{ "title": "Oftalmología", "slug": "oftalmologia", "image": "oftalmologia.png", "parent": "5b8077346f8f2922dc70a2af"},
+	{ "title": "Oncología", "slug": "oncologia", "image": "oncologia.png", "parent": "5b8077346f8f2922dc70a2af"},
+	{ "title": "Otorrinolaringología", "slug": "otorrinolaringologia", "image": "otorrinolaringologia.png", "parent": "5b8077346f8f2922dc70a2af"},
+	{ "title": "Nefrología", "slug": "nefrologia", "image": "nefrologia.png", "parent": "5b8077346f8f2922dc70a2af"},
+	{ "title": "Cirugía", "slug": "cirugia-hearth", "image": "cirugia-hearth.png", "parent": "5b8077346f8f2922dc70a2af"},
+	{ "title": "Dermatología", "slug": "dermatologia", "image": "dermatologia.png", "parent": "5b8077346f8f2922dc70a2af"},
+	{ "title": "Fisioterapia", "slug": "fisioterapia", "image": "fisioterapia.png", "parent": "5b8077346f8f2922dc70a2af"},
+	{ "title": "Patología", "slug": "patologia", "image": "patologia.png", "parent": "5b8077346f8f2922dc70a2af"},
+
+//Odontologia
+{
+	"title": "Odontología",
+	"slug": "odontologia",
+	"image": "odontologia.png"
+}
+
+	{ "title": "Endodoncia", "link": "/endodoncia", "image": "endodoncia.png", "parent": "5b8077186f8f2922dc70a2ae"},
+	{ "title": "Estética dental", "link": "/estetica-dental", "image": "estetica-dental.png", "parent": "5b8077186f8f2922dc70a2ae"},
+	{ "title": "Odontopediatría", "link": "/odontopediatria", "image": "odontopediatria.png", "parent": "5b8077186f8f2922dc70a2ae"},
+	{ "title": "Implantología", "link": "/implantologia", "image": "implantologia.png", "parent": "5b8077186f8f2922dc70a2ae"},
+	{ "title": "Ortodoncia", "link": "/ortodoncia", "image": "ortodoncia.png", "parent": "5b8077186f8f2922dc70a2ae"},
+	{ "title": "Periodoncia", "link": "/periodoncia", "image": "periodoncia.png", "parent": "5b8077186f8f2922dc70a2ae"},
+	{ "title": "Odontología General", "link": "/odontologia-general", "image": "odontologia-general.png", "parent": "5b8077186f8f2922dc70a2ae"},
+	{ "title": "Oclusión", "link": "/oclusion", "image": "oclusion.png", "parent": "5b8077186f8f2922dc70a2ae"},
+	{ "title": "Cirugía Oral", "link": "/cirugia-oral", "image": "cirugia-oral.png", "parent": "5b8077186f8f2922dc70a2ae"},
+	{ "title": "Laboratorio Dental", "link": "/laboratorio-dental", "image": "laboratorio-dental.png", "parent": "5b8077186f8f2922dc70a2ae"},
+	{ "title": "Rehabilitación Oral", "link": "/rehabilitacion-oral", "image": "rehabilitacion-oral.png", "parent": "5b8077186f8f2922dc70a2ae"},
+	{ "title": "Radiología", "link": "/radiologia", "image": "radiologia.png", "parent": "5b8077186f8f2922dc70a2ae"},
