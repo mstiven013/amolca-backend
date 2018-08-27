@@ -6,6 +6,7 @@ const TokenService = require('../auth/tokenService');
 const Book = require('../books/BooksModel');
 const Order = require('../orders/OrdersModel');
 const Post = require('../posts/PostsModel');
+const Cart = require('../carts/cartsModel');
 //const TokenService = require('../auth/tokenService');
 
 //Controller to get ALL users
@@ -43,7 +44,7 @@ async function getBooksByUser(req, res) {
             if(err) return res.status(500).send({status: 500, message: `An error has ocurred in server: ${err}`});
 
             //If books not exists
-            if(!books || books.length < 1) return res.status(404).send({status: 404, message: 'Not exists books registered by this user'});
+            if(!books) return res.status(404).send({status: 404, message: 'Not exists books registered by this user'});
 
             return res.status(200).send(books);
         });
@@ -87,10 +88,34 @@ async function getPostsByUser(req, res) {
             if(err) return res.status(500).send({status: 500, message: `An error has ocurred in server: ${err}`});
 
             //If posts not exists
-            if(!posts || posts.length < 1) return res.status(404).send({status: 404, message: 'Not exists posts registered by this user'});
+            if(!posts) return res.status(404).send({status: 404, message: 'Not exists posts registered by this user'});
 
             return res.status(200).send(posts);
         });
+}
+
+//Controller function to get carts by User Id
+async function getCartsByUser(req, res) {
+    let id = req.params.id;
+
+    Cart.find({"userId": id})
+        .populate({
+            path: 'products.this', 
+            select: '-__v -relateProducts -specialty -publicationYear -userId -attributes -variations -volume -inventory.individualSale -inventory.allowReservations -isbn -metaTitle -metaDescription -metaTags -author -relatedProducts -version -visibility -countries -description -index'
+        })
+        .populate({
+            path: 'userId', 
+            select: '-__v -signupDate -products -posts -role'
+        })
+        .exec((err, cart) => {
+            //If an error has ocurred
+            if(err) return res.status(500).send({status: 500, message: `An error has ocurred in server: ${err}`});
+
+            //If cart not exists
+            if(!cart) return res.status(404).send({status: 404, message: 'Not exists posts registered by this user'});
+            
+            return res.status(200).send(cart)
+        })
 }
 
 //Controller to delete one user
@@ -143,6 +168,7 @@ module.exports = {
     getPostsByUser,
     getBooksByUser,
     getOrdersByUser,
+    getCartsByUser,
     deleteUser,
     updateUser
 }

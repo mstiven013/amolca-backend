@@ -15,13 +15,16 @@ router.get('/', UserCtrl.getAllUsers);
 router.get('/:id', UserCtrl.getOneUser);
 
 //Get posts by user Id
-router.get('/:id/posts',  UserCtrl.getPostsByUser)
+router.get('/:id/posts', UserCtrl.getPostsByUser)
 
 //Get books by user Id
-router.get('/:id/books',  UserCtrl.getBooksByUser)
+router.get('/:id/books', UserCtrl.getBooksByUser)
 
 //Get orders by user Id
-router.get('/:id/orders',  UserCtrl.getOrdersByUser)
+router.get('/:id/orders', UserCtrl.getOrdersByUser)
+
+//Get Cart by user Id
+router.get('/:id/carts', UserCtrl.getCartsByUser);
 
 //Delete an user
 router.delete('/:id', UserCtrl.deleteUser);

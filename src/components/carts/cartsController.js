@@ -4,83 +4,51 @@ const mongoose = require('mongoose');
 const Book = require('../books/BooksModel');
 const Cart = require('./cartsModel');
 
+//"Related Products" Populate var
+const populateProducts = { 
+    path: 'products.this', 
+    select: '-__v -relateProducts -specialty -publicationYear -userId -attributes -variations -volume -inventory.individualSale -inventory.allowReservations -isbn -metaTitle -metaDescription -metaTags -author -relatedProducts -version -visibility -countries -description -index'
+};
+
+//"User" Populate var
+const populateUserId = { 
+    path: 'userId', 
+    select: '-__v -signupDate -products -posts -role'
+};
+
 //Controller function to get Carts
-async function getCart(req, res) {
+async function getAllCarts(req, res) {
 
-    if(req.query.searchby) {
-        
-        //Controller function to get cart by ID
-        if(req.query.searchby == 'id') {
-            Cart.findById(req.query.id, (err, cart) => {
+    Cart.find()
+        .populate(populateProducts)
+        .populate(populateUserId)
+        .exec((err, carts) => {
+            //If an error has ocurred in server
+            if(err) return res.status(500).send({status: 500, message: `An error has ocurred in server: ${err}`});
 
-                let pIds = [];
-                let nProducts = [];
+            //If not exists carts
+            if(!carts) return res.status(404).send({status: 404, message: 'Not exists carts in db'})
 
-                //If an error has ocurred in server
-                if(err) return res.status(500).send({status: 500, message: `An error has ocurred in server: ${err}`});
+            return res.status(200).send(carts)
+        })
+}
 
-                //If not exists carts
-                if(!cart) return res.status(404).send({status: 404, message: 'This resource not exists'})
+//Controller function to get One cart by Id
+async function getCartsById(req, res) {
+    let id = req.params.id;
 
-                for(let i = 0; i < cart.products.length; i++) {
-                    pIds.push(cart.products[i].id);
-                }
+    Cart.findById(id)
+        .populate(populateProducts)
+        .populate(populateUserId)
+        .exec((err, cart) => {
+            //If an error has ocurred in server
+            if(err) return res.status(500).send({status: 500, message: `An error has ocurred in server: ${err}`});
 
-                Book.find({"_id": { $in: pIds}})
-                    .exec((err, books) => {
-                        //If an error has ocurred in server
-                        if(err) return res.status(500).send({status: 500, message: `An error has ocurred in server: ${err}`});
+            //If not exists carts
+            if(!cart) return res.status(404).send({status: 404, message: 'This resource not exists'})
 
-                        //If not exists books
-                        if(!cart) return res.status(404).send({status: 404, message: 'This resources not exists'})
-
-                        for(let i = 0; i < cart.products.length; i++) {
-                            //Search product with same ID
-                            let sProduct = cart.products.filter(cP => cP.id == books[i]._id);
-
-                            //Set name and image attributes
-                            sProduct[0].set('name',books[i].name,{strict:false})
-                            sProduct[0].set('image',books[i].image,{strict:false})
-
-                            //Add this object to new Products var
-                            nProducts.push(sProduct[0]);
-                        }
-
-                        //Update products cart
-                        cart.products = nProducts;
-
-                        return res.status(200).send(cart);
-                    })
-            })
-        }
-
-        //Controller function to get cart by USER ID
-        if(req.query.searchby == 'user') {
-            Cart.find({"userId": req.query.id}, (err, carts) => {
-                //If an error has ocurred in server
-                if(err) return res.status(500).send({status: 500, message: `An error has ocurred in server: ${err}`});
-
-                //If not exists carts
-                if(!carts || carts.length < 1) return res.status(404).send({status: 404, message: 'This user not have carts in db'})
-
-                return res.status(200).send({"carts": carts, "count": carts.length});
-            })
-        }
-
-    } else {
-
-        Cart.find()
-            .exec((err, carts) => {
-                //If an error has ocurred in server
-                if(err) return res.status(500).send({status: 500, message: `An error has ocurred in server: ${err}`});
-
-                //If not exists carts
-                if(!carts || carts.length < 1) return res.status(404).send({status: 404, message: 'Not exists carts in db'})
-
-                return res.status(200).send(carts)
-            })
-    }
-
+            return res.status(200).send(cart)
+        })
 }
 
 //Controller function to create ONE Cart
@@ -100,7 +68,12 @@ async function createCart(req, res) {
 
         if(err && err.code != 11000) return res.status(500).send({status: 500, message: `An error has ocurred saving this resource: ${err}`});
 
-        return res.status(201).send(cartStored);
+        Cart.populate(cartStored, [populateProducts, populateUserId], (err, cartStored) =>{
+            //If an error has ocurred
+            if(err) return res.status(500).send({status: 500, message: `An error has ocurred saving this resource: ${err}`});
+
+            return res.status(201).send(cartStored);
+        });
     });
 
 }
@@ -118,46 +91,18 @@ async function updateCart(req, res) {
 
     let update = req.body;
 
-    Cart.findByIdAndUpdate(cartId, update, {new: true} , (err, cart) => {
-        //If cart not exists
-        if(!cart) return res.status(404).send({status: 404, message: 'This resource not exists'});
+    Cart.findOneAndUpdate(cartId, update, {new: true})
+        .populate(populateProducts)
+        .populate(populateUserId)
+        .exec((err, cart) => {
+            //If cart not exists
+            if(!cart) return res.status(404).send({status: 404, message: 'This resource not exists'});
 
-        //If cart exists but an error has ocurred
-        if(err) return res.status(500).send({status: 500, message: `An error has ocurred in server: ${err}`});
+            //If cart exists but an error has ocurred
+            if(err) return res.status(500).send({status: 500, message: `An error has ocurred in server: ${err}`});
 
-        let pIds = [];
-        let nProducts = [];
-
-        for(let i = 0; i < cart.products.length; i++) {
-            pIds.push(cart.products[i].id);
-        }
-
-        Book.find({"_id": { $in: pIds}})
-            .exec((err, books) => {
-                //If an error has ocurred in server
-                if(err) return res.status(500).send({status: 500, message: `An error has ocurred in server: ${err}`});
-
-                //If not exists books
-                if(!cart) return res.status(404).send({status: 404, message: 'This resources not exists'})
-
-                for(let i = 0; i < cart.products.length; i++) {
-                    //Search product with same ID
-                    let sProduct = cart.products.filter(cP => cP.id == books[i]._id);
-
-                    //Set name and image attributes
-                    sProduct[0].set('name',books[i].name,{strict:false})
-                    sProduct[0].set('image',books[i].image,{strict:false})
-
-                    //Add this object to new Products var
-                    nProducts.push(sProduct[0]);
-                }
-
-                //Update products cart
-                cart.products = nProducts;
-
-                return res.status(200).send(cart);
-            })
-    });
+            return res.status(200).send(cart);
+        });
 }
 
 //Controller function to delete one Cart
@@ -179,7 +124,8 @@ async function deleteCart(req, res) {
 }
 
 module.exports = {
-    getCart,
+    getAllCarts,
+    getCartsById,
     createCart,
     updateCart,
     deleteCart

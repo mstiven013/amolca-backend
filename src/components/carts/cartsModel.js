@@ -5,8 +5,9 @@ const moment = require('moment');
 const Schema = mongoose.Schema;
 
 const productSchema = new Schema({
-    id: {
-        type: String,
+    this: {
+        type: Schema.Types.ObjectId,
+        ref: 'Book',
         required: true
     },
     price: {
@@ -30,7 +31,10 @@ const CartSchema = new Schema({
         type: Date,
         default: moment()
     },
-    userId: String,
+    userId: {
+        type: Schema.Types.ObjectId,
+        ref: 'User'
+    },
     total: Number
 }, {strict: false});
 

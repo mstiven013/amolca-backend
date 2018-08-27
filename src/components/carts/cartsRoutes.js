@@ -7,12 +7,14 @@ const CartCtrl = require('./cartsController');
 
 const auth = require('../auth/authMiddleware');
 
-//Get carts
-router.get('/', CartCtrl.getCart);
+//Get all carts
+router.get('/', CartCtrl.getAllCarts);
+
+//Get carts by Id
+router.get('/:id', CartCtrl.getCartsById);
 
 //Create cart
 router.post('/', CartCtrl.createCart);
-
 
 //Delete an cart
 router.delete('/:id', CartCtrl.deleteCart);
