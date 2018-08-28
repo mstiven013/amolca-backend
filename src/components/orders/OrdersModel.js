@@ -48,6 +48,7 @@ const OrderSchema = new Schema({
         ref: 'User',
         required: true
     }],
+    notes: String,
     total: Number
 });
 

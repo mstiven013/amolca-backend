@@ -18,6 +18,15 @@ const imageSubSchema = new Schema({
     principal: Boolean
 }, { _id: false });
 
+const VariationsSubSchema = new Schema({
+    description: String,
+    name: String,
+    image: String,
+    countries: {
+        type: countrySubSchema
+    }
+})
+
 const BookSchema = new Schema({
     attributes: [{
         id: String,
@@ -67,23 +76,7 @@ const BookSchema = new Schema({
         required: true
     }],
     variations: [{
-        description: String,
-        name: String,
-        price: Number,
-        image: String,
-        inventory: {
-            quantity: Number,
-            isbn: String,
-            state: {
-                type: String,
-                enum: ["RESERVED", "SPENT", "STOCK"],
-                default: "STOCK"
-            },
-            individualSale: {
-                type: Boolean,
-                default: false
-            }
-        }
+        type: VariationsSubSchema
     }],
     version: [{
         type: String,
