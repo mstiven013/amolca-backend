@@ -1,8 +1,10 @@
 'use strict'
 
 const mongoose = require('mongoose');
+const Post = require('../posts/PostsModel');
 const Schema = mongoose.Schema;
 
+//Country subschema
 const countrySubSchema = new Schema({
     name: { type: String, required: true },
     price: { type: Number, default: 0 },
@@ -13,42 +15,23 @@ const countrySubSchema = new Schema({
     reservationNote: { type: String }
 }, { _id: false });
 
-const imageSubSchema = new Schema({
-    name: { type: String, default: "image-not-found.jpg" },
-    principal: Boolean
-}, { _id: false });
-
-const VariationsSubSchema = new Schema({
-    description: String,
-    name: String,
-    image: String,
-    countries: {
-        type: countrySubSchema
-    }
-})
-
-const BookSchema = new Schema({
-    attributes: [{
-        id: String,
-        value: String
-    }],
+//Product schema
+const bookSchema = new Schema({
     author: [{
         type: Schema.Types.ObjectId, 
         ref: 'Author',
         required: true
     }],
-    description: String,
     index: String,
     isbn: {
         type: String,
         required: true,
         unique: true
     },
-    image: [{ type: imageSubSchema  }],
-    name: {
-        type: String,
-        required: true
-    },
+    specialty: [{
+        type: Schema.Types.ObjectId, 
+        ref: 'Specialty'
+    }],
     countries: [{
         type: countrySubSchema,
         required: true
@@ -59,45 +42,18 @@ const BookSchema = new Schema({
     },
     relatedProducts: [{
         type: Schema.Types.ObjectId,
-        ref: 'Book'
-    }],
-    slug: {
-        type: String,
-        required: true,
-        unique: true
-    },
-    specialty: [{
-        type: Schema.Types.ObjectId, 
-        ref: 'Specialty'
-    }],
-    userId: [{
-        type: Schema.Types.ObjectId,
-        ref: 'User',
-        required: true
-    }],
-    variations: [{
-        type: VariationsSubSchema
+        ref: 'Post'
     }],
     version: [{
         type: String,
         default: "PAPER",
         enum: ["PAPER", "EBOOK", "VIDEO"]
     }],
-    visibility: {
-        type: String,
-        default: "ALL",
-        enum: ["ALL", "HOME", "SHOP", "SPECIALTY"]
-    },
     volume: {
         type: Number,
         default: 1
-    },
-    //Meta tags
-    metaTitle: String,
-    metaDescription: String,
-    metaTags: [{ type: String }]
+    }
 });
 
-const Book = mongoose.model('Book', BookSchema)
-
-module.exports = mongoose.model('Book', BookSchema);
+//module.exports = mongoose.model('Book', BookSchema);
+module.exports = Post.discriminator('Book', bookSchema);

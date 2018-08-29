@@ -6,7 +6,7 @@ const Book = require('./BooksModel');
 //"Related Products" Populate var
 const populateRelatedProducts = { 
     path: 'relatedProducts', 
-    select: '-__v -relatedProducts -specialty -publicationYear -userId -attributes -variations -volume -inventory.individualSale -inventory.allowReservations -isbn -metaTitle -metaDescription -metaTags'
+    select: '-__v -relatedProducts -specialty -publicationYear -userId -attributes -variations -volume -inventory.individualSale -inventory.allowReservations -isbn -metaTitle -metaDescription -metaTags -kind'
 };
 
 //"User" Populate var
@@ -202,7 +202,7 @@ async function getBooksByState(req, res) {
 
 //Controller function to create one Book
 async function createBook(req, res) {
-    if(!req.body.author || !req.body.name || !req.body.publicationYear || !req.body.slug || !req.body.userId) {
+    if(!req.body.author || !req.body.title || !req.body.publicationYear || !req.body.slug || !req.body.userId) {
         return res.status(400).send({status: 400, message: 'Bad request'})
     }
 
