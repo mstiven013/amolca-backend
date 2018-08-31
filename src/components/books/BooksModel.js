@@ -49,6 +49,7 @@ const bookSchema = new Schema({
         default: "PAPER",
         enum: ["PAPER", "EBOOK", "VIDEO"]
     }],
+    image: String,
     volume: {
         type: Number,
         default: 1
