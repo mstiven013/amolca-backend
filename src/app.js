@@ -47,6 +47,9 @@ app.use(API_URL + '/shops', require('./components/shops/shopsRoutes'));
 app.use(API_URL + '/authors', require('./components/authors/authorsRoutes'));
 app.use(API_URL + '/posts', require('./components/posts/postsRoutes'));
 
+//Uploads routes
+app.use(API_URL + '/uploads', require('./components/uploads/uploadsRoutes'));
+
 //Static files
 app.use(express.static(__dirname + '/public'));
 
