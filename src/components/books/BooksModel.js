@@ -15,6 +15,11 @@ const countrySubSchema = new Schema({
     reservationNote: { type: String }
 }, { _id: false });
 
+const attributesSubSchema = new Schema({
+    name: String,
+    value: String
+}, { _id: false });
+
 //Product schema
 const bookSchema = new Schema({
     author: [{
@@ -23,6 +28,7 @@ const bookSchema = new Schema({
         required: true
     }],
     index: String,
+    keyPoints: String,
     isbn: {
         type: String,
         required: true,
@@ -49,6 +55,10 @@ const bookSchema = new Schema({
         default: "PAPER",
         enum: ["PAPER", "EBOOK", "VIDEO"]
     }],
+    attributes: [
+        attributesSubSchema
+    ],
+    numberPages: Number,
     image: String,
     volume: {
         type: Number,
