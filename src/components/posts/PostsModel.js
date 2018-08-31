@@ -42,6 +42,7 @@ const PostSchema = new Schema({
     },
 
     //Meta tags
+    description: String,
     metaTitle: String,
     metaDescription: String,
     metaTags: [{ type: String }]
