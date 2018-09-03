@@ -24,12 +24,12 @@ router.get('/state/:state', PostCtrl.getPostsByState);
 router.get('/category/:category', PostCtrl.getPostsByCategory);
 
 //Create Post
-router.post('/', PostCtrl.createPost);
+router.post('/', auth.isAuth, PostCtrl.createPost);
 
 //Delete an Post
-router.delete('/:id', PostCtrl.deletePost);
+router.delete('/:id', auth.isAuth, PostCtrl.deletePost);
 
 //Update Post
-router.put('/:id', PostCtrl.updatePost);
+router.put('/:id', auth.isAuth, PostCtrl.updatePost);
 
 module.exports = router;

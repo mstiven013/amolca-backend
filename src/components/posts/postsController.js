@@ -1,7 +1,8 @@
 'use strict'
 
 const mongoose = require('mongoose');
-const Post = require('./PostsModel');
+const Post = require('./BlogsModel');
+const All = require('./PostsModel');
 
 //"User" Populate var
 const populateUserId = { 

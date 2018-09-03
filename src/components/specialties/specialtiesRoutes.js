@@ -21,12 +21,12 @@ router.get('/slug/:slug', SpecialtiesCtrl.getSpecialtiesBySlug)
 router.get('/:id/books', SpecialtiesCtrl.getBooksBySpecialty)
 
 //Create Author
-router.post('/', SpecialtiesCtrl.createSpecialty);
+router.post('/', auth.isAuth, SpecialtiesCtrl.createSpecialty);
 
 //Delete an Author
-router.delete('/:id', SpecialtiesCtrl.deleteSpecialty);
+router.delete('/:id', auth.isAuth, SpecialtiesCtrl.deleteSpecialty);
 
 //Update Author
-router.put('/:id', SpecialtiesCtrl.updateSpecialty);
+router.put('/:id', auth.isAuth, SpecialtiesCtrl.updateSpecialty);
 
 module.exports = router;

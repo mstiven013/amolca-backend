@@ -260,7 +260,7 @@ async function deleteBook(req, res) {
 
             res.status(200).send({status: 200, message: 'Resource successfully removed'});
         });
-    });    
+    });
 }
 
 module.exports = {

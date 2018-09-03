@@ -27,12 +27,12 @@ router.get('/state/:state', BookCtrl.getBooksByState);
 router.get('/publication/:year', BookCtrl.getBooksByPublication);
 
 //Create book
-router.post('/', BookCtrl.createBook);
+router.post('/', auth.isAuth, BookCtrl.createBook);
 
 //Delete an book
-router.delete('/:id', BookCtrl.deleteBook);
+router.delete('/:id', auth.isAuth, BookCtrl.deleteBook);
 
 //Update book
-router.put('/:id', BookCtrl.updateBook);
+router.put('/:id', auth.isAuth, BookCtrl.updateBook);
 
 module.exports = router;

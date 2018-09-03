@@ -9,27 +9,27 @@ const UserCtrl = require('./usersController');
 const auth = require('../auth/authMiddleware');
 
 //Get all users
-router.get('/', UserCtrl.getAllUsers);
+router.get('/', auth.isAuth, UserCtrl.getAllUsers);
 
 //Get an user
-router.get('/:id', UserCtrl.getOneUser);
+router.get('/:id', auth.isAuth, UserCtrl.getOneUser);
 
 //Get posts by user Id
-router.get('/:id/posts', UserCtrl.getPostsByUser)
+router.get('/:id/posts', auth.isAuth, UserCtrl.getPostsByUser)
 
 //Get books by user Id
-router.get('/:id/books', UserCtrl.getBooksByUser)
+router.get('/:id/books', auth.isAuth, UserCtrl.getBooksByUser)
 
 //Get orders by user Id
-router.get('/:id/orders', UserCtrl.getOrdersByUser)
+router.get('/:id/orders', auth.isAuth, UserCtrl.getOrdersByUser)
 
 //Get Cart by user Id
-router.get('/:id/carts', UserCtrl.getCartsByUser);
+router.get('/:id/carts', auth.isAuth, UserCtrl.getCartsByUser);
 
 //Delete an user
-router.delete('/:id', UserCtrl.deleteUser);
+router.delete('/:id', auth.isAuth, UserCtrl.deleteUser);
 
 //Update user
-router.put('/:id', UserCtrl.updateUser);
+router.put('/:id', auth.isAuth, UserCtrl.updateUser);
 
 module.exports = router;

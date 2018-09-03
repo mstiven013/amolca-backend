@@ -34,7 +34,6 @@ const PostSchema = new Schema({
     },
     thumbnail: String,
     excerpt: String,
-    content: String,
     visibility: {
         type: String,
         default: "ALL",
