@@ -23,6 +23,9 @@ router.get('/state/:state', PostCtrl.getPostsByState);
 //Get posts by category
 router.get('/category/:category', PostCtrl.getPostsByCategory);
 
+//Get post comments
+router.get('/:id/comments', PostCtrl.getCommentsByPostId);
+
 //Create Post
 router.post('/', auth.isAuth, PostCtrl.createPost);
 

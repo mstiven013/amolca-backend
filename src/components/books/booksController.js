@@ -29,7 +29,7 @@ const populateSpecialty = {
 //Controller function to get ALL Books
 async function getAllBooks(req, res) {
     let limit = 100000;
-    let sortKey = 'name';
+    let sortKey = 'title';
     let sortOrder = 1;
 
     if(req.query.limit) {
@@ -130,7 +130,7 @@ async function getBooksByPublication(req, res) {
     let year = req.params.year;
 
     let limit = 100000;
-    let sortKey = 'name';
+    let sortKey = 'title';
     let sortOrder = 1;
 
     if(req.query.limit) {
@@ -167,7 +167,7 @@ async function getBooksByPublication(req, res) {
 async function getBooksByState(req, res) {
     let state = req.params.state.toUpperCase();
     let limit = 100000;
-    let sortKey = 'name';
+    let sortKey = 'title';
     let sortOrder = 1;
 
     if(req.query.limit) {

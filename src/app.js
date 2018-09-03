@@ -46,6 +46,7 @@ app.use(API_URL + '/orders', require('./components/orders/ordersRoutes'));
 app.use(API_URL + '/shops', require('./components/shops/shopsRoutes'));
 app.use(API_URL + '/authors', require('./components/authors/authorsRoutes'));
 app.use(API_URL + '/posts', require('./components/posts/postsRoutes'));
+app.use(API_URL + '/comments', require('./components/comments/commentsRoutes'));
 
 //Uploads routes
 app.use(API_URL + '/uploads', require('./components/uploads/uploadsRoutes'));

@@ -2,6 +2,7 @@
 
 const mongoose = require('mongoose');
 const Post = require('./BlogsModel');
+const Comment = require('../comments/CommentsModel');
 const All = require('./PostsModel');
 
 //"User" Populate var
@@ -120,6 +121,39 @@ async function getPostsBySlug(req, res) {
         });
 }
 
+//Controller function to get comments by Post ID
+async function getCommentsByPostId(req, res) {
+    let limit = 100000;
+    let sortKey = 'post';
+    let sortOrder = 1;
+
+    if(req.query.limit) {
+        limit = parseInt(req.query.limit);
+    }
+    if(req.query.orderby) {
+        sortKey = req.query.orderby;
+    }
+    if(req.query.order) {
+        sortOrder = req.query.order;
+    }
+
+    let sort = {[sortKey]: sortOrder};
+
+    Comment.find({"post" : req.params.id})
+        .populate(populateUserId)
+        .limit(limit)
+        .sort(sort)
+        .exec((err, comments) => {
+            //If comments not exists
+            if(!comments) return res.status(404).send({status: 404, message: 'Not exists comments with this inventory state'});
+
+            //If an error has ocurred
+            if(err) return res.status(500).send({status: 500, message: `An error has ocurred in server: ${err}`});
+
+            return res.status(200).send(comments);
+        });
+}
+
 //Controller function to create one post
 async function createPost(req, res) {
     if(!req.body.userId || !req.body.title || !req.body.slug) {
@@ -185,6 +219,7 @@ module.exports = {
     getPostsByCategory,
     getPostsByState,
     getPostsBySlug,
+    getCommentsByPostId,
     createPost,
     deletePost,
     updatePost
