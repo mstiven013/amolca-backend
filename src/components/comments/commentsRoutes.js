@@ -15,7 +15,7 @@ router.get('/', CommentCtrl.getAllComments);
 router.get('/:id', CommentCtrl.getCommentsById);
 
 //Create book
-router.post('/', auth.isAuth, CommentCtrl.createComments);
+router.post('/', CommentCtrl.createComments);
 
 //Delete an book
 router.delete('/:id', auth.isAuth, CommentCtrl.deleteComments);

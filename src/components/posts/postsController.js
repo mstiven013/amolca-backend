@@ -123,6 +123,7 @@ async function getPostsBySlug(req, res) {
 
 //Controller function to get comments by Post ID
 async function getCommentsByPostId(req, res) {
+    console.log(req.params.id)
     let limit = 100000;
     let sortKey = 'post';
     let sortOrder = 1;
@@ -145,7 +146,7 @@ async function getCommentsByPostId(req, res) {
         .sort(sort)
         .exec((err, comments) => {
             //If comments not exists
-            if(!comments) return res.status(404).send({status: 404, message: 'Not exists comments with this inventory state'});
+            if(!comments) return res.status(404).send({status: 404, message: 'Not exists comments in this post'});
 
             //If an error has ocurred
             if(err) return res.status(500).send({status: 500, message: `An error has ocurred in server: ${err}`});

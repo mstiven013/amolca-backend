@@ -54,7 +54,7 @@ async function getCommentsById(req, res) {
 
 //Controller function to create one comment
 async function createComments(req, res) {
-    if(!req.body.post || !req.body.userName || !req.body.content || !req.body.userName || !req.body.userEmail) {
+    if(!req.body.post || !req.body.userName || !req.body.content || !req.body.userEmail) {
         return res.status(400).send({status: 400, message: 'Bad request'})
     }
 

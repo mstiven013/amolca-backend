@@ -22,6 +22,9 @@ const CommentSchema = new Schema({
     userEmail: {
         type: String,
         required: true
+    },
+    userAvatar: {
+        type: String
     }
 });
 
