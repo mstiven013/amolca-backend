@@ -23,6 +23,9 @@ router.get('/:id/books', AuthorCtrl.getBooksByAuthor);
 //Create Author
 router.post('/', auth.isAuth, AuthorCtrl.createAuthor);
 
+//Create many Authors
+router.post('/many', auth.isAuth, AuthorCtrl.createManyAuthors);
+
 //Delete an Author
 router.delete('/:id', auth.isAuth, AuthorCtrl.deleteAuthor);
 

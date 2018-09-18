@@ -3,8 +3,9 @@
 const mongoose = require('mongoose')
 const Specialty = require('./SpecialtiesModel')
 const Book = require('../books/BooksModel');
+const controller = {};
 
-async function getSpecialties(req, res) {
+controller.getSpecialties = async function(req, res) {
     //Controller function to get ALL specialties if not exists a query
     Specialty.find().exec((err, specialties) => {
         //If an error has ocurred in server
@@ -24,7 +25,7 @@ async function getSpecialties(req, res) {
 }
 
 //COntroller function to get One Specialty by Id
-async function getSpecialtiesById(req, res) {
+controller.getSpecialtiesById = async function(req, res) {
     let specialtyId = req.params.id;
 
     Specialty.findById(specialtyId)
@@ -42,7 +43,7 @@ async function getSpecialtiesById(req, res) {
 }
 
 //Controller function to get one Post by Slug
-async function getSpecialtiesBySlug(req, res) {
+controller.getSpecialtiesBySlug = async function(req, res) {
     let specialtySlug = req.params.slug;
 
     Specialty.findOne({ slug: specialtySlug })
@@ -59,7 +60,7 @@ async function getSpecialtiesBySlug(req, res) {
 }
 
 //Controller function to get Books by Specialties
-async function getBooksBySpecialty(req, res) {
+controller.getBooksBySpecialty = async function(req, res) {
     let specialtyId = req.params.id;
 
     Book.find({specialty: specialtyId})
@@ -77,7 +78,7 @@ async function getBooksBySpecialty(req, res) {
         });
 }
 
-async function createSpecialty(req, res) {
+controller.createSpecialty = async function(req, res) {
     //If not has required fields
     if(!req.body.title || !req.body.slug) {
         return res.status(400).send({status: 400, message: 'Bad request'})
@@ -100,7 +101,57 @@ async function createSpecialty(req, res) {
     });
 }
 
-async function updateSpecialty(req, res) {
+controller.createManySpecialties = async function(req, res) {
+    
+    let specialties = req.body;
+
+    Specialty.insertMany(specialties, (err, specialtiesStored) => {
+        if(err && err.code == 11000) return res.status(409).send({status: 409, message: `This resource alredy exists: ${err}`});
+
+        if(err && err.code != 11000) return res.status(500).send({status: 500, message: `An error has ocurred saving this resource: ${err}`});
+
+        let flag = true;
+
+        for (let i = 0; i < specialtiesStored.length; i++) {
+            if(specialtiesStored[i].parent && specialtiesStored[i].parent != '') {
+                let parentId = specialtiesStored[i].parent;
+                let childId = specialtiesStored[i]._id;
+                controller.addChildToSpecialty(parentId, childId)
+                    .then(resp => {
+                       //console.log('Saved')
+                       flag = true;
+                    }).catch( resp => {
+                        return res.status(500).send({status: 500, message: `An error has ocurred saving this resource: ${resp}`});
+                    })
+            }
+        }
+
+        if(flag) return res.status(201).send(specialtiesStored);
+    });
+}
+
+//Controller function to add childs specialties
+controller.addChildToSpecialty = async function(parent, child) {
+    const prom = new Promise((res, rej) => {
+        try {
+            Specialty.update({ "_id": parent }, { $push: { "childs": child }}, {new: true} , (err, specialty) => {
+                //If specialty not exists
+                if(!specialty) return rej({status: 404, message: 'This resource not exists'})
+        
+                //If specialty exists but an error has ocurred
+                if(err) return rej({status: 500, message: `An error has ocurred in server: ${err}`})
+        
+                res(specialty)
+            });
+        } catch(e) {
+            rej({ status: 500, message: `An error has ocurred ${e}` })
+        }
+    });
+
+    return prom;
+}
+
+controller.updateSpecialty = async function(req, res) {
     let specialtyId = req.params.id;
     let update = req.body;
 
@@ -121,7 +172,7 @@ async function updateSpecialty(req, res) {
     });
 }
 
-async function deleteSpecialty(req, res) {
+controller.deleteSpecialty = async function(req, res) {
     Specialty.findById(req.params.id, (err, specialty) => {
         //If specialty not exists
         if(!specialty) return res.status(404).send({status: 404, message: 'This resource not exists'})
@@ -138,12 +189,4 @@ async function deleteSpecialty(req, res) {
     });  
 }
 
-module.exports = {
-    getSpecialties,
-    getSpecialtiesById,
-    getSpecialtiesBySlug,
-    getBooksBySpecialty,
-    createSpecialty,
-    updateSpecialty,
-    deleteSpecialty
-}
+module.exports = controller;

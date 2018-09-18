@@ -18,10 +18,11 @@ const SpecialtySchema = new Schema({
     },
     //Defaults
     registerDate: { type: Date, default: moment() },
-    top: { type: Boolean, default: true },
+    top: { type: Boolean, default: false },
     //Optionals
     description: String,
     image: String,
+    icon: String,
     parent: { type: Schema.Types.ObjectId, ref: 'Specialty' },
     childs: [{ type: Schema.Types.ObjectId, ref: 'Specialty' }],
     metaTitle: String,
