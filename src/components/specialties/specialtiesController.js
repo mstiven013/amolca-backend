@@ -97,7 +97,21 @@ controller.createSpecialty = async function(req, res) {
 
         if(err && err.code != 11000) return res.status(500).send({status: 500, message: `An error has ocurred saving this resource: ${err}`});
 
-        return res.status(201).send(specialtyStored);
+        let flag = true;
+
+        if(specialtyStored.parent && specialtyStored.parent != '') {
+            let parentId = specialtyStored.parent;
+            let childId = specialtyStored._id;
+            controller.addChildToSpecialty(parentId, childId)
+                .then(resp => {
+                    //console.log('Saved')
+                    flag = true;
+                }).catch( resp => {
+                    return res.status(500).send({status: 500, message: `An error has ocurred saving this resource: ${resp}`});
+                })
+        }
+
+        if(flag) return res.status(201).send(specialtyStored);
     });
 }
 

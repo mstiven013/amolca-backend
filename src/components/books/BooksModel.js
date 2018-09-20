@@ -28,6 +28,10 @@ const bookSchema = new Schema({
         required: true
     }],
     index: String,
+    interest: [{
+        type: Schema.Types.ObjectId, 
+        ref: 'Specialty'
+    }],
     keyPoints: String,
     isbn: {
         type: String,
