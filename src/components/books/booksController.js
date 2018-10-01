@@ -2,7 +2,7 @@
 
 const mongoose = require('mongoose');
 const Book = require('./BooksModel');
-const slugMiddleware = require('../common/slugMiddlewares');
+const slugMiddleware = require('../services/slugMiddlewares');
 const controller = {};
 
 //"Related Products" Populate var
