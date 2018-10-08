@@ -41,8 +41,7 @@ const bookSchema = new Schema({
         ref: 'Specialty'
     }],
     countries: [{
-        type: countrySubSchema,
-        required: true
+        type: countrySubSchema
     }],
     publicationYear: {
         type: Number,
