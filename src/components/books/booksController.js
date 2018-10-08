@@ -33,7 +33,11 @@ async function getAllBooks(req, res) {
     let sortOrder = 1;
 
     if(req.query.limit) {
-        limit = parseInt(req.query.limit);
+        if(isNaN(req.query.limit)) {
+            limit = parseInt(req.query.limit);
+        } else {
+            limit = req.query.limit;
+        }
     }
     if(req.query.orderby) {
         sortKey = req.query.orderby;
@@ -134,7 +138,11 @@ async function getBooksByPublication(req, res) {
     let sortOrder = 1;
 
     if(req.query.limit) {
-        limit = parseInt(req.query.limit);
+        if(isNaN(req.query.limit)) {
+            limit = parseInt(req.query.limit);
+        } else {
+            limit = req.query.limit;
+        }
     }
     if(req.query.orderby) {
         sortKey = req.query.orderby;
@@ -171,7 +179,11 @@ async function getBooksByState(req, res) {
     let sortOrder = 1;
 
     if(req.query.limit) {
-        limit = parseInt(req.query.limit);
+        if(isNaN(req.query.limit)) {
+            limit = parseInt(req.query.limit);
+        } else {
+            limit = req.query.limit;
+        }
     }
     if(req.query.orderby) {
         sortKey = req.query.orderby;
