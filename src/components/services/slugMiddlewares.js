@@ -120,6 +120,7 @@ middleware.chars = function(str, id) {
     return slug
 }
 
+//Many books slug middleware
 middleware.many = function(arr) {
 
     const slugs = new Promise((res, rej) => {
@@ -128,6 +129,41 @@ middleware.many = function(arr) {
             for (let i = 0; i < arr.length; i++) {
                 let sc = /[' '_,.%$#¬|/¡!¿?*=""\/\\( )[\]:;]/gi; // Special chars to replace in str
                 let x = arr[i].title.replace(sc, '-'); // Replace all special chars
+
+                x = x.replace(/\-+/g, '-'); //Replace repeated separator
+
+                x = x.substring(0, x.length - 1) + x.substring(x.length - 1, x.length).replace(/[-]/gi, ''); // Replace last char if is an separator
+
+                for(let i=0; i<changes.length; i++) {
+                    x = x.replace(changes[i].letters, changes[i].base);
+                }
+
+                arr[i]['slug'] = x.toLowerCase()
+            }
+
+            res(arr) // Return str with lowercase style  
+
+        } catch(e) {
+            //Reject if an error has ocurred
+            rej({
+                status: 500,
+                message: `An error has ocurred in server: ${e}`
+            })
+        }
+    });
+
+    return slugs
+}
+
+//Many books slug middleware
+middleware.authors = function(arr) {
+
+    const slugs = new Promise((res, rej) => {
+        try {
+
+            for (let i = 0; i < arr.length; i++) {
+                let sc = /[' '_,.%$#¬|/¡!¿?*=""\/\\( )[\]:;]/gi; // Special chars to replace in str
+                let x = arr[i].name.replace(sc, '-'); // Replace all special chars
 
                 x = x.replace(/\-+/g, '-'); //Replace repeated separator
 
