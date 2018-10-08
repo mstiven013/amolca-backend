@@ -97,7 +97,7 @@ middleware.manyBooks = function(arr) {
         try {
 
             for (let i = 0; i < arr.length; i++) {
-                let sc = /[' '_,.%$#¬|/¡!¿?*=""\/\\( )[\]:;]/gi; // Special chars to replace in str
+                let sc = /[' '’_,.%$#¬|/¡!¿?*=""\/\\( )[\]:;]/gi; // Special chars to replace in str
                 let x = arr[i].title.replace(sc, '-'); // Replace all special chars
 
                 x = x.replace(/\-+/g, '-'); //Replace repeated separator
@@ -130,7 +130,7 @@ middleware.oneBook = function(obj) {
 
     const slugs = new Promise((res, rej) => {
         try {
-            let sc = /[' '_,.%$#¬|/¡!¿?*=""\/\\( )[\]:;]/gi; // Special chars to replace in str
+            let sc = /[' '’_,.%$#¬|/¡!¿?*=""\/\\( )[\]:;]/gi; // Special chars to replace in str
             let x = obj.title.replace(sc, '-'); // Replace all special chars
 
             x = x.replace(/\-+/g, '-'); //Replace repeated separator
@@ -164,7 +164,7 @@ middleware.manyAuthors = function(arr) {
         try {
 
             for (let i = 0; i < arr.length; i++) {
-                let sc = /[' '_,.%$#¬|/¡!¿?*=""\/\\( )[\]:;]/gi; // Special chars to replace in str
+                let sc = /[' '’_,.%$#¬|/¡!¿?*=""\/\\( )[\]:;]/gi; // Special chars to replace in str
                 let x = arr[i].name.replace(sc, '-'); // Replace all special chars
 
                 x = x.replace(/\-+/g, '-'); //Replace repeated separator
@@ -197,7 +197,7 @@ middleware.oneAuthor = function(obj) {
 
     const slugs = new Promise((res, rej) => {
         try {
-            let sc = /[' '_,.%$#¬|/¡!¿?*=""\/\\( )[\]:;]/gi; // Special chars to replace in str
+            let sc = /[' '’_,.%$#¬|/¡!¿?*=""\/\\( )[\]:;]/gi; // Special chars to replace in str
             let x = obj.name.replace(sc, '-'); // Replace all special chars
 
             x = x.replace(/\-+/g, '-'); //Replace repeated separator
