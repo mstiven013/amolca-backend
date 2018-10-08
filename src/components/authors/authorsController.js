@@ -7,22 +7,46 @@ const Book = require('../books/BooksModel');
 const controller = {};
 
 controller.getAuthors = async function(req, res) {
-     //Controller function to get ALL authors if not exists a query
-     Author.find().exec((err, authors) => {
-        //If an error has ocurred in server
-        if(err) return res.status(500).send({status: 500, message: `An error has ocurred in server: ${err}`})
 
-        //Populate for get specialties without optional data
-        Specialty.populate(authors, {path: 'specialty', select: '-registerDate -__v -description -top -parent -childs -metaTags -metaTitle -metaDescription'}, (err, authors) => {
+    let limit = 100000;
+    let sortKey = 'name';
+    let sortOrder = 1;
+
+    if(req.query.limit) {
+        if(isNaN(req.query.limit)) {
+            limit = parseInt(req.query.limit);
+        } else {
+            limit = req.query.limit;
+        }
+    }
+    if(req.query.orderby) {
+        sortKey = req.query.orderby;
+    }
+    if(req.query.order) {
+        sortOrder = req.query.order;
+    }
+
+    let sort = {[sortKey]: sortOrder};
+
+    //Controller function to get ALL authors if not exists a query
+    Author.find()
+        .limit(limit)
+        .sort(sort)
+        .exec((err, authors) => {
             //If an error has ocurred in server
             if(err) return res.status(500).send({status: 500, message: `An error has ocurred in server: ${err}`})
 
-            //If not exists authors in db
-            if(!authors || authors.length < 1) return res.status(404).send({status: 404, message: `Not exists authors in db`})
+            //Populate for get specialties without optional data
+            Specialty.populate(authors, {path: 'specialty', select: '-registerDate -__v -description -top -parent -childs -metaTags -metaTitle -metaDescription'}, (err, authors) => {
+                //If an error has ocurred in server
+                if(err) return res.status(500).send({status: 500, message: `An error has ocurred in server: ${err}`})
 
-            return res.status(200).send(authors);
-        });
-    })
+                //If not exists authors in db
+                if(!authors || authors.length < 1) return res.status(404).send({status: 404, message: `Not exists authors in db`})
+
+                return res.status(200).send(authors);
+            });
+        })
 }
 
 controller.getAuthorsById = async function(req, res) {
@@ -59,12 +83,34 @@ controller.getAuthorsBySlug = async function(req, res) {
 
 //Controller function to get books by author
 controller.getBooksByAuthor = async function(req, res) {
+
+    let limit = 100000;
+    let sortKey = 'title';
+    let sortOrder = 1;
+
+    if(req.query.limit) {
+        if(isNaN(req.query.limit)) {
+            limit = parseInt(req.query.limit);
+        } else {
+            limit = req.query.limit;
+        }
+    }
+    if(req.query.orderby) {
+        sortKey = req.query.orderby;
+    }
+    if(req.query.order) {
+        sortOrder = req.query.order;
+    }
+
+    let sort = {[sortKey]: sortOrder};
     let authorId = req.params.id;
 
     Book.find({author: authorId})
         .populate({ path: 'relatedProducts', select: '-__v -relatedProducts -specialty -publicationYear -userId -attributes -variations -volume -inventory.individualSale -inventory.allowReservations -inventory.isbn'})
         .populate({ path: 'userId', select: '-__v -signupDate -products -posts -role '})
         .populate({ path: 'author', select: '-__v -registerDate -specialty '})
+        .limit(limit)
+        .sort(sort)
         .exec((err, books) => {
             //If book not exists
             if(!books || books.length < 1) return res.status(404).send({status: 404, message: 'This author not have books registered'});
