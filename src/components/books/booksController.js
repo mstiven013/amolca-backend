@@ -2,7 +2,7 @@
 
 const mongoose = require('mongoose');
 const Book = require('./BooksModel');
-const slugMiddleware = require('../common/slugMiddlewares');
+const slugMiddleware = require('../services/slugMiddlewares');
 const controller = {};
 
 //"Related Products" Populate var
@@ -42,11 +42,7 @@ controller.getAllBooks = (req, res) => {
     let sortOrder = 1;
 
     if(req.query.limit) {
-        if(isNaN(req.query.limit)) {
-            limit = parseInt(req.query.limit);
-        } else {
-            limit = req.query.limit;
-        }
+        limit = parseInt(req.query.limit);
     }
     if(req.query.orderby) {
         sortKey = req.query.orderby;
@@ -67,12 +63,11 @@ controller.getAllBooks = (req, res) => {
         .limit(limit)
         .sort(sort)
         .exec((err, books) => {
-            console.log(sort)
             //If an error has ocurred in server
             if(err) return res.status(500).send({status: 500, message: `An error has ocurred in server: ${err}`})
 
             //If not exists books in db
-            if(!books || books.length < 1) return res.status(404).send({status: 404, message: `Not exists books in db`})
+            if(!books) return res.status(404).send({status: 404, message: `Not exists books in db`})
 
             return res.status(200).send(books);
         })
@@ -151,11 +146,7 @@ controller.getBooksByPublication = (req, res) => {
     let sortOrder = 1;
 
     if(req.query.limit) {
-        if(isNaN(req.query.limit)) {
-            limit = parseInt(req.query.limit);
-        } else {
-            limit = req.query.limit;
-        }
+       limit = parseInt(req.query.limit);
     }
     if(req.query.orderby) {
         sortKey = req.query.orderby;
@@ -176,10 +167,12 @@ controller.getBooksByPublication = (req, res) => {
         .sort(sort)
         .exec((err, books) => {
             //If book not exists
-            if(!books || books.length < 1) return res.status(404).send({status: 404, message: 'Not exists books publicated in this year'});
+            if(!books) return res.status(404).send({status: 404, message: 'Not exists books publicated in this year'});
 
             //If an error has ocurred
-            if(err) return res.status(500).send({status: 500, message: `An error has ocurred in server: ${err}`});
+            if(err) 
+                console.log(err)
+                return res.status(500).send({status: 500, message: `An error has ocurred in server: ${err}`});
 
             return res.status(200).send(books);
         });
@@ -193,11 +186,7 @@ controller.getBooksByState = (req, res) => {
     let sortOrder = 1;
 
     if(req.query.limit) {
-        if(isNaN(req.query.limit)) {
-            limit = parseInt(req.query.limit);
-        } else {
-            limit = req.query.limit;
-        }
+       limit = parseInt(req.query.limit);
     }
     if(req.query.orderby) {
         sortKey = req.query.orderby;
@@ -218,7 +207,7 @@ controller.getBooksByState = (req, res) => {
         .sort(sort)
         .exec((err, books) => {
             //If book not exists
-            if(!books || books.length < 1) return res.status(404).send({status: 404, message: 'Not exists books with this inventory state'});
+            if(!books) return res.status(404).send({status: 404, message: 'Not exists books with this inventory state'});
 
             //If an error has ocurred
             if(err) return res.status(500).send({status: 500, message: `An error has ocurred in server: ${err}`});

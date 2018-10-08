@@ -13,11 +13,7 @@ controller.getAuthors = async function(req, res) {
     let sortOrder = 1;
 
     if(req.query.limit) {
-        if(isNaN(req.query.limit)) {
-            limit = parseInt(req.query.limit);
-        } else {
-            limit = req.query.limit;
-        }
+        limit = parseInt(req.query.limit);
     }
     if(req.query.orderby) {
         sortKey = req.query.orderby;
@@ -85,7 +81,7 @@ controller.getAuthorsBySlug = async function(req, res) {
 controller.getBooksByAuthor = async function(req, res) {
 
     let limit = 100000;
-    let sortKey = 'title';
+    let sortKey = 'name';
     let sortOrder = 1;
 
     if(req.query.limit) {
