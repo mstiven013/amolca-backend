@@ -34,8 +34,7 @@ const bookSchema = new Schema({
     }],
     keyPoints: String,
     isbn: {
-        type: String,
-        required: true
+        type: String
     },
     specialty: [{
         type: Schema.Types.ObjectId, 
