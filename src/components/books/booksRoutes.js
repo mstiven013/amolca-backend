@@ -29,6 +29,9 @@ router.get('/publication/:year', BookCtrl.getBooksByPublication);
 //Create book
 router.post('/', auth.isAuth, BookCtrl.createBook);
 
+//Create many books
+router.post('/many', auth.isAuth, BookCtrl.createManyBooks);
+
 //Delete an book
 router.delete('/:id', auth.isAuth, BookCtrl.deleteBook);
 

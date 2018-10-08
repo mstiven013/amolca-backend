@@ -4,8 +4,9 @@ const mongoose = require('mongoose');
 const Author = require('./AuthorsModel');
 const Specialty = require('../specialties/SpecialtiesModel');
 const Book = require('../books/BooksModel');
+const controller = {};
 
-async function getAuthors(req, res) {
+controller.getAuthors = async function(req, res) {
      //Controller function to get ALL authors if not exists a query
      Author.find().exec((err, authors) => {
         //If an error has ocurred in server
@@ -24,7 +25,7 @@ async function getAuthors(req, res) {
     })
 }
 
-async function getAuthorsById(req, res) {
+controller.getAuthorsById = async function(req, res) {
     let authorId = req.params.id;
 
     Author.findById(authorId, (err, author) => {
@@ -41,7 +42,7 @@ async function getAuthorsById(req, res) {
 }
 
 //Controller function to get one book by Slug
-async function getAuthorsBySlug(req, res) {
+controller.getAuthorsBySlug = async function(req, res) {
     let authorSlug = req.params.slug;
 
     Author.findOne({ slug: authorSlug })
@@ -57,7 +58,7 @@ async function getAuthorsBySlug(req, res) {
 }
 
 //Controller function to get books by author
-async function getBooksByAuthor(req, res) {
+controller.getBooksByAuthor = async function(req, res) {
     let authorId = req.params.id;
 
     Book.find({author: authorId})
@@ -76,7 +77,7 @@ async function getBooksByAuthor(req, res) {
 }
 
 //Controller function to create an author
-async function createAuthor(req, res) {
+controller.createAuthor = async function(req, res) {
     if(!req.body.name || !req.body.slug) {
         return res.status(400).send({status: 400, message: 'Bad request'})
     }
@@ -101,8 +102,31 @@ async function createAuthor(req, res) {
     });
 }
 
+//Controller function to create an author
+controller.createManyAuthors = async function(req, res) {
+
+    let authors = req.body;
+
+    Author.insertMany( authors, (err, authorStored) => {
+        if(err && err.code == 11000) return res.status(409).send({status: 409, message: `This resource alredy exists: ${err}`});
+
+        if(err && err.code != 11000) return res.status(500).send({status: 500, message: `An error has ocurred saving this resource: ${err}`});
+
+        //Populate for get specialties without optional data
+        Specialty.populate(authorStored, {path: 'specialty', select: '-registerDate -__v -description -top -parent -childs -metaTags -metaTitle -metaDescription'}, (err, authorStored) => {
+            //If an error has ocurred in server
+            if(err) return res.status(500).send({status: 500, message: `An error has ocurred in server: ${err}`})
+
+            //If not exists authorStored in db
+            if(!authorStored) return res.status(404).send({status: 404, message: `Not exists author in db`})
+
+            return res.status(201).send(authorStored);
+        });
+    });
+}
+
 //Controller function to delete ONE author
-async function deleteAuthor(req, res) {
+controller.deleteAuthor = async function(req, res) {
     Author.findById(req.params.id, (err, author) => {
         //If author not exists
         if(!author) return res.status(404).send({status: 404, message: 'This resource not exists'})
@@ -120,7 +144,7 @@ async function deleteAuthor(req, res) {
 }
 
 //Controller function to update ONE author
-async function updateAuthor(req, res) {
+controller.updateAuthor = async function(req, res) {
     let authorId = req.params.id;
     let update = req.body;
 
@@ -144,12 +168,4 @@ async function updateAuthor(req, res) {
     });
 }
 
-module.exports = {
-    getAuthors,
-    getAuthorsById,
-    getAuthorsBySlug,
-    getBooksByAuthor,
-    createAuthor,
-    deleteAuthor,
-    updateAuthor
-}
+module.exports = controller;

@@ -2,6 +2,8 @@
 
 const mongoose = require('mongoose');
 const Book = require('./BooksModel');
+const slugMiddleware = require('../common/slugMiddlewares');
+const controller = {};
 
 //"Related Products" Populate var
 const populateRelatedProducts = { 
@@ -21,13 +23,20 @@ const populateAuthor = {
     select: '-__v -registerDate -specialty -metaTitle -metaDescription -metaTags'
 };
 
+//"Specialty" populate
 const populateSpecialty = {
     path: 'specialty',
     select: '-__v -registerDate -metaTitle -metaDescription -metaTags -childs -parent -image -description -top'
 }
 
+//"Interest" populate
+const populateInterest = {
+    path: 'interest',
+    select: '-__v -registerDate -metaTitle -metaDescription -metaTags -childs -parent -image -description -top'
+}
+
 //Controller function to get ALL Books
-async function getAllBooks(req, res) {
+controller.getAllBooks = (req, res) => {
     let limit = 100000;
     let sortKey = 'title';
     let sortOrder = 1;
@@ -54,6 +63,7 @@ async function getAllBooks(req, res) {
         .populate(populateUserId)
         .populate(populateAuthor)
         .populate(populateSpecialty)
+        .populate(populateInterest)
         .limit(limit)
         .sort(sort)
         .exec((err, books) => {
@@ -69,7 +79,7 @@ async function getAllBooks(req, res) {
 }
 
 //Controller function to get one book by Id
-async function getBooksById(req, res) {
+controller.getBooksById = (req, res) => {
     let bookId = req.params.id;
 
     Book.findById(bookId)
@@ -77,6 +87,7 @@ async function getBooksById(req, res) {
         .populate(populateUserId)
         .populate(populateAuthor)
         .populate(populateSpecialty)
+        .populate(populateInterest)
         .exec((err, book) => {
             //If book not exists
             if(!book) return res.status(404).send({status: 404, message: 'This resource not exists'});
@@ -90,7 +101,7 @@ async function getBooksById(req, res) {
 }
 
 //Controller function to get one book by Slug
-async function getBooksBySlug(req, res) {
+controller.getBooksBySlug = (req, res) => {
     let bookSlug = req.params.slug;
 
     Book.findOne({ slug: bookSlug })
@@ -98,6 +109,7 @@ async function getBooksBySlug(req, res) {
         .populate(populateUserId)
         .populate(populateAuthor)
         .populate(populateSpecialty)
+        .populate(populateInterest)
         .exec((err, book) => {
             //If book not exists
             if(!book) return res.status(404).send({status: 404, message: 'This resource not exists'});
@@ -110,7 +122,7 @@ async function getBooksBySlug(req, res) {
 }
 
 //Controller function to get one book by Isbn
-async function getBooksByIsbn(req, res) {
+controller.getBooksByIsbn = (req, res) => {
     let isbn = req.params.isbn;
 
     Book.findOne({"isbn" : isbn})
@@ -118,6 +130,7 @@ async function getBooksByIsbn(req, res) {
         .populate(populateUserId)
         .populate(populateAuthor)
         .populate(populateSpecialty)
+        .populate(populateInterest)
         .exec((err, books) => {
             //If book not exists
             if(!books) return res.status(404).send({status: 404, message: 'This resource not exists'});
@@ -130,7 +143,7 @@ async function getBooksByIsbn(req, res) {
 }
 
 //Controller function to get Books by Publication year
-async function getBooksByPublication(req, res) {
+controller.getBooksByPublication = (req, res) => {
     let year = req.params.year;
 
     let limit = 100000;
@@ -158,6 +171,7 @@ async function getBooksByPublication(req, res) {
         .populate(populateUserId)
         .populate(populateAuthor)
         .populate(populateSpecialty)
+        .populate(populateInterest)
         .limit(limit)
         .sort(sort)
         .exec((err, books) => {
@@ -172,7 +186,7 @@ async function getBooksByPublication(req, res) {
 }
 
 //Controller function to get Books by state
-async function getBooksByState(req, res) {
+controller.getBooksByState = (req, res) => {
     let state = req.params.state.toUpperCase();
     let limit = 100000;
     let sortKey = 'title';
@@ -199,6 +213,7 @@ async function getBooksByState(req, res) {
         .populate(populateUserId)
         .populate(populateAuthor)
         .populate(populateSpecialty)
+        .populate(populateInterest)
         .limit(limit)
         .sort(sort)
         .exec((err, books) => {
@@ -213,8 +228,8 @@ async function getBooksByState(req, res) {
 }
 
 //Controller function to create one Book
-async function createBook(req, res) {
-    if(!req.body.author || !req.body.title || !req.body.publicationYear || !req.body.slug || !req.body.userId) {
+controller.createBook = (req, res) => {
+    if(!req.body.author || !req.body.title || !req.body.publicationYear || !req.body.userId) {
         return res.status(400).send({status: 400, message: 'Bad request'})
     }
 
@@ -237,7 +252,27 @@ async function createBook(req, res) {
     });
 }
 
-async function updateBook(req, res) {
+controller.createManyBooks = (req, res) => {
+
+    let books = req.body;
+
+    slugMiddleware.many(books)
+        .then((data) => {
+            Book.insertMany( data, (err, stored) => {
+                if(err && err.code == 11000) return res.status(409).send({status: 409, message: `This resource alredy exists: ${err}`});
+        
+                if(err && err.code != 11000) return res.status(500).send({status: 500, message: `An error has ocurred saving this resource: ${err}`});
+
+                return res.status(201).send(stored);
+            });
+        })
+        .catch((err) => {
+            res.status(500).send({status: 500, message: `An error has ocurred saving this resource: ${err}`});
+        })
+
+}
+
+controller.updateBook = (req, res) => {
     let bookId = req.params.id;
     let update = req.body;
 
@@ -246,6 +281,7 @@ async function updateBook(req, res) {
         .populate(populateUserId)
         .populate(populateAuthor)
         .populate(populateSpecialty)
+        .populate(populateInterest)
         .exec((err, book) => {
             //If book not exists
             if(!book) return res.status(404).send({status: 404, message: 'This resource not exists'})
@@ -258,7 +294,7 @@ async function updateBook(req, res) {
 }
 
 //Controller function to delete one Book
-async function deleteBook(req, res) {
+controller.deleteBook = (req, res) => {
     Book.findById(req.params.id, (err, book) => {
         //If book not exists
         if(!book) return res.status(404).send({status: 404, message: 'This resource not exists'})
@@ -275,14 +311,4 @@ async function deleteBook(req, res) {
     });
 }
 
-module.exports = {
-    getAllBooks,
-    getBooksBySlug,
-    getBooksById,
-    getBooksByIsbn,
-    getBooksByState,
-    getBooksByPublication,
-    createBook,
-    deleteBook,
-    updateBook
-}
+module.exports = controller;

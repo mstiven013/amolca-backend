@@ -8,7 +8,7 @@ const SpecialtiesCtrl = require('./specialtiesController');
 
 const auth = require('../auth/authMiddleware');
 
-//Get all Authors
+//Get all Specialtys
 router.get('/', SpecialtiesCtrl.getSpecialties);
 
 //Get one Specialty by ID
@@ -20,13 +20,16 @@ router.get('/slug/:slug', SpecialtiesCtrl.getSpecialtiesBySlug)
 //Get books by Specialty
 router.get('/:id/books', SpecialtiesCtrl.getBooksBySpecialty)
 
-//Create Author
+//Create Specialty
 router.post('/', auth.isAuth, SpecialtiesCtrl.createSpecialty);
 
-//Delete an Author
+//Create Many Specialties
+router.post('/many', auth.isAuth, SpecialtiesCtrl.createManySpecialties);
+
+//Delete an Specialty
 router.delete('/:id', auth.isAuth, SpecialtiesCtrl.deleteSpecialty);
 
-//Update Author
+//Update Specialty
 router.put('/:id', auth.isAuth, SpecialtiesCtrl.updateSpecialty);
 
 module.exports = router;
