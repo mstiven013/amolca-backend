@@ -121,28 +121,34 @@ controller.getBooksByAuthor = async function(req, res) {
 
 //Controller function to create an author
 controller.createAuthor = async function(req, res) {
-    if(!req.body.name || !req.body.slug) {
+    if(!req.body.name) {
         return res.status(400).send({status: 400, message: 'Bad request'})
     }
 
-    let author = new Author(req.body);
+    slugMiddleware.oneAuthor(req.body)
+        .then((data) => {
+            let author = new Author(data);
 
-    author.save((err, authorStored) => {
-        if(err && err.code == 11000) return res.status(409).send({status: 409, message: `This resource alredy exists: ${err}`});
-
-        if(err && err.code != 11000) return res.status(500).send({status: 500, message: `An error has ocurred saving this resource: ${err}`});
-
-        //Populate for get specialties without optional data
-        Specialty.populate(authorStored, {path: 'specialty', select: '-registerDate -__v -description -top -parent -childs -metaTags -metaTitle -metaDescription'}, (err, authorStored) => {
-            //If an error has ocurred in server
-            if(err) return res.status(500).send({status: 500, message: `An error has ocurred in server: ${err}`})
-
-            //If not exists authorStored in db
-            if(!authorStored) return res.status(404).send({status: 404, message: `Not exists author in db`})
-
-            return res.status(201).send(authorStored);
-        });
-    });
+            author.save((err, authorStored) => {
+                if(err && err.code == 11000) return res.status(409).send({status: 409, message: `This resource alredy exists: ${err}`});
+        
+                if(err && err.code != 11000) return res.status(500).send({status: 500, message: `An error has ocurred saving this resource: ${err}`});
+        
+                //Populate for get specialties without optional data
+                Specialty.populate(authorStored, {path: 'specialty', select: '-registerDate -__v -description -top -parent -childs -metaTags -metaTitle -metaDescription'}, (err, authorStored) => {
+                    //If an error has ocurred in server
+                    if(err) return res.status(500).send({status: 500, message: `An error has ocurred in server: ${err}`})
+        
+                    //If not exists authorStored in db
+                    if(!authorStored) return res.status(404).send({status: 404, message: `Not exists author in db`})
+        
+                    return res.status(201).send(authorStored);
+                });
+            });
+        })
+        .catch((err) => {
+            res.status(500).send({status: 500, message: `An error has ocurred saving this resource: ${err}`});
+        })
 }
 
 //Controller function to create an author
@@ -150,7 +156,7 @@ controller.createManyAuthors = async function(req, res) {
 
     let authors = req.body;
 
-    slugMiddleware.authors(authors)
+    slugMiddleware.manyAuthors(authors)
         .then((data) => {
             Author.insertMany( data, (err, authorStored) => {
                 if(err && err.code == 11000) return res.status(409).send({status: 409, message: `This resource alredy exists: ${err}`});

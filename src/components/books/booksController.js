@@ -222,30 +222,36 @@ controller.createBook = (req, res) => {
         return res.status(400).send({status: 400, message: 'Bad request'})
     }
 
-    let book = new Book(req.body);
+    slugMiddleware.oneBook(req.body)
+        .then((data) => {
+            let book = new Book(data);
 
-    book.save((err, bookStored) => {
-        //If book already exists
-        if(err && err.code == 11000) return res.status(409).send({status: 409, message: `This resource alredy exists: ${err}`});
+            book.save((err, bookStored) => {
+                //If book already exists
+                if(err && err.code == 11000) return res.status(409).send({status: 409, message: `This resource alredy exists: ${err}`});
 
-        //If an error has ocurred
-        if(err && err.code != 11000) return res.status(500).send({status: 500, message: `An error has ocurred saving this resource: ${err}`});
+                //If an error has ocurred
+                if(err && err.code != 11000) return res.status(500).send({status: 500, message: `An error has ocurred saving this resource: ${err}`});
 
-        //Populate and return book stored
-        Book.populate(bookStored, [populateRelatedProducts, populateUserId, populateAuthor, populateSpecialty], (err, bookStored) => {
-            //If an error has ocurred
-            if(err) return res.status(500).send({status: 500, message: `An error has ocurred saving this resource: ${err}`});
+                //Populate and return book stored
+                Book.populate(bookStored, [populateRelatedProducts, populateUserId, populateAuthor, populateSpecialty], (err, bookStored) => {
+                    //If an error has ocurred
+                    if(err) return res.status(500).send({status: 500, message: `An error has ocurred saving this resource: ${err}`});
 
-            return res.status(201).send(bookStored);
+                    return res.status(201).send(bookStored);
+                })
+            });
         })
-    });
+        .catch((err) => {
+            res.status(500).send({status: 500, message: `An error has ocurred saving this resource: ${err}`});
+        })
 }
 
 controller.createManyBooks = (req, res) => {
 
     let books = req.body;
 
-    slugMiddleware.many(books)
+    slugMiddleware.manyBooks(books)
         .then((data) => {
             Book.insertMany( data, (err, stored) => {
                 if(err && err.code == 11000) return res.status(409).send({status: 409, message: `This resource alredy exists: ${err}`});

@@ -90,38 +90,8 @@ let changes = [
     {'base':'z','letters':/[\u007A\u24E9\uFF5A\u017A\u1E91\u017C\u017E\u1E93\u1E95\u01B6\u0225\u0240\u2C6C\uA763]/g}
 ];
 
-middleware.chars = function(str, id) {
-
-    const slug = new Promise((res, rej) => {
-        try {
-
-            let sc = /[' '_,.%$#¬|/¡!¿?*=""\/\\( )[\]:;]/gi; // Special chars to replace in str
-            let x = str.replace(sc, '-'); // Replace all special chars
-
-            x = x.replace(/\-+/g, '-'); //Replace repeated separator
-
-            x = x.substring(0, x.length - 1) + x.substring(x.length - 1, x.length).replace(/[-]/gi, ''); // Replace last char if is an separator
-
-            for(let i=0; i<changes.length; i++) {
-                x = x.replace(changes[i].letters, changes[i].base);
-            }
-
-            res({ slug: x.toLowerCase(), id: id }) // Return str with lowercase style
-
-        } catch(e) {
-            //Reject if an error has ocurred
-            rej({
-                status: 500,
-                message: `An error has ocurred in server: ${e}`
-            })
-        }
-    });
-
-    return slug
-}
-
 //Many books slug middleware
-middleware.many = function(arr) {
+middleware.manyBooks = function(arr) {
 
     const slugs = new Promise((res, rej) => {
         try {
@@ -155,8 +125,40 @@ middleware.many = function(arr) {
     return slugs
 }
 
-//Many books slug middleware
-middleware.authors = function(arr) {
+//One book slug middleware
+middleware.oneBook = function(obj) {
+
+    const slugs = new Promise((res, rej) => {
+        try {
+            let sc = /[' '_,.%$#¬|/¡!¿?*=""\/\\( )[\]:;]/gi; // Special chars to replace in str
+            let x = obj.title.replace(sc, '-'); // Replace all special chars
+
+            x = x.replace(/\-+/g, '-'); //Replace repeated separator
+
+            x = x.substring(0, x.length - 1) + x.substring(x.length - 1, x.length).replace(/[-]/gi, ''); // Replace last char if is an separator
+
+            for(let i=0; i<changes.length; i++) {
+                x = x.replace(changes[i].letters, changes[i].base);
+            }
+
+            obj['slug'] = x.toLowerCase()
+
+            res(obj) // Return str with lowercase style  
+
+        } catch(e) {
+            //Reject if an error has ocurred
+            rej({
+                status: 500,
+                message: `An error has ocurred in server: ${e}`
+            })
+        }
+    });
+
+    return slugs
+}
+
+//Many authors slug middleware
+middleware.manyAuthors = function(arr) {
 
     const slugs = new Promise((res, rej) => {
         try {
@@ -188,6 +190,38 @@ middleware.authors = function(arr) {
     });
 
     return slugs
-} 
+}
+
+//One author slug middleware
+middleware.oneAuthor = function(obj) {
+
+    const slugs = new Promise((res, rej) => {
+        try {
+            let sc = /[' '_,.%$#¬|/¡!¿?*=""\/\\( )[\]:;]/gi; // Special chars to replace in str
+            let x = obj.name.replace(sc, '-'); // Replace all special chars
+
+            x = x.replace(/\-+/g, '-'); //Replace repeated separator
+
+            x = x.substring(0, x.length - 1) + x.substring(x.length - 1, x.length).replace(/[-]/gi, ''); // Replace last char if is an separator
+
+            for(let i=0; i<changes.length; i++) {
+                x = x.replace(changes[i].letters, changes[i].base);
+            }
+
+            obj['slug'] = x.toLowerCase()
+
+            res(obj) // Return str with lowercase style  
+
+        } catch(e) {
+            //Reject if an error has ocurred
+            rej({
+                status: 500,
+                message: `An error has ocurred in server: ${e}`
+            })
+        }
+    });
+
+    return slugs
+}
 
 module.exports = middleware;
