@@ -16,9 +16,9 @@ const API_URL = config.api + config.version;
 //Middlewares
 const auth = require('./components/auth/authMiddleware');
 app.use(morgan('dev'));
-app.use(express.json({limit: '250mb'}));
-app.use(bodyParser.json({limit: '250mb'}));
-app.use(bodyParser.urlencoded({ limit: '250mb', extended: true}));
+//app.use(express.json());
+app.use(bodyParser.json({ limit: '50mb' }));
+app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 
 // Add headers
 app.use(function (req, res, next) {
