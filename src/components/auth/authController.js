@@ -40,7 +40,7 @@ async function signUp(req, res) {
             secure: true,
             auth: {
                 user: 'mstiven013@gmail.com',
-                pass: 'SoloNacional1947'
+                pass: 'SoloNacional960723'
             }
         });
     
