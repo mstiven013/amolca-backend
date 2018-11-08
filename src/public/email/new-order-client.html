@@ -12,7 +12,7 @@
         <!--Body email-->
         <div style="color: #AAAAAA; font-size: 16px; line-height: normal; padding: 30px 50px; font-family: Arial;">
             <p>Su pedido ha sido recibido y ahora se está procesando. Los detalles de su pedido se muestran a continuación para su referencia.</p>
-            <p style="font-size: 18px; font-weight: bold; margin-top: 0px;">Pedido: <span style="color: #00396F;">a83i2ngdio11</span> <b>(Noviembre 08, 2018)</b></p>
+            <p style="font-size: 18px; font-weight: bold; margin-top: 0px;">Pedido: <span style="color: #00396F;">{{orderId}}</span> <b>({{orderDate}})</b></p>
 
             <table style="border-collapse: collapse; color: #737373; font-size: 14px; text-align: left; width: 100%;">
                 <thead>
@@ -29,17 +29,21 @@
                     </tr>
                 </thead>
                 <tbody>
+
+                    {{#each products}}
+                    <p>{{@index}}. {{this}}</p>
                     <tr>
                         <td style="box-sizing: border-box; border: 1px solid #e0e0e0; padding: 10px 15px;">
-                            McGraw-Hill Atlas de Cirugía Plástica Contorneado Corporal
+                            {{ this.this }}
                         </td>
                         <td style="box-sizing: border-box; border: 1px solid #e0e0e0; padding: 10px 15px;">
-                            2
+                            {{ this.quantity }}
                         </td>
                         <td style="box-sizing: border-box; border: 1px solid #e0e0e0; padding: 10px 15px;">
-                            $650.000,00
+                            {{multiply this.price this.quantity}}
                         </td>
                     </tr>
+                    {{/each}}
 
                     <tr>
                         <td colspan="2" style="box-sizing: border-box; border: 1px solid #e0e0e0; padding: 10px 15px;">
@@ -73,7 +77,7 @@
                             Total:
                         </td>
                         <td style="box-sizing: border-box; border: 1px solid #e0e0e0; font-weight: bold; padding: 10px 15px;">
-                            $650.000,00
+                            {{orderTotal}}
                         </td>
                     </tr>
                 </tbody>
@@ -83,9 +87,9 @@
                 <p style="color: #00396F; border-bottom: 1px solid #e0e0e0; font-size: 20px; font-weight: bold; padding-bottom: 20px;">
                     Detalles del cliente
                 </p>
-                <p><b>Nombre:</b> Stiven Lopez</p>
-                <p><b>Correo electrónico:</b> diseno@webussines.com</p>
-                <p><b>Teléfono:</b> +57 (4) 509 9574</p>
+                <p><b>Nombre:</b> {{user.name}} {{user.lastname}}</p>
+                <p><b>Correo electrónico:</b> {{user.email}}</p>
+                <p><b>País:</b> {{user.country}}</p>
             </div>
             
             <div style="margin: 20px auto 30px;">

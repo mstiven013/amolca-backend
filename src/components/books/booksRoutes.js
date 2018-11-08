@@ -38,4 +38,21 @@ router.delete('/:id', auth.isAuth, BookCtrl.deleteBook);
 //Update book
 router.put('/:id', auth.isAuth, BookCtrl.updateBook);
 
+
+router.post('/change-image', (req, res) => {
+    Book.find({ image: { "$regex": /assets\/img\/books/i, "$options": "i" } })
+        .exec((err, books) => {
+            
+            for (let i = 0; i < books.length; i++) {
+                books[i].image = books[i].image.replace('assets/img/books', 'uploads/books')
+
+                books[i].save((err, saved) => {
+                    if(err) return res.send(500)
+                })
+            }
+
+            return books;
+        })
+});
+
 module.exports = router;

@@ -2,10 +2,11 @@
 
 const mongoose = require('mongoose');
 const Order = require('./OrdersModel');
+const email = require('../emails/emailsOrders');
 
 //"Related Products" Populate var
 const populateProducts = { 
-    path: 'cart.products.id', 
+    path: 'cart.products.this', 
     select: '-__v -relatedProducts -specialty -publicationYear -userId -attributes -variations -volume -inventory.individualSale -inventory.allowReservations -inventory.isbn'
 };
 
@@ -77,7 +78,13 @@ async function createOrders(req, res) {
             //If an error has ocurred
             if(err) return res.status(500).send({status: 500, message: `An error has ocurred saving this resource: ${err}`});
 
-            return res.status(201).send(orderStored);
+            email.createOrder(orderStored)
+                .then((resp) => {
+                    return res.status(201).send(orderStored);
+                })
+                .catch((e) => {
+                    return res.status(500).send({status: 500, message: `This resource is saved but an error has ocurred sending the order email: ${err}`});
+                })
         })
     });
 }

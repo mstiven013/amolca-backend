@@ -5,6 +5,13 @@ const config = {
     version: '1.0',
     api: '/api/',
     port: process.env.PORT || 3000,
+    mailer: {
+        user: 'mstiven013@gmail.com',
+        pass: 'SoloNacional960723',
+        service: 'gmail',
+        host: 'smtp.gmail.com',
+        port: 465
+    },
     secret: 'mysecretkeyapi',
     dbPass: encodeURIComponent('AmolcaColombia%2018'),    
     //dbAuth: {},
