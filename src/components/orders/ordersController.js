@@ -62,7 +62,7 @@ async function getOrdersById(req, res) {
 async function createOrders(req, res) {
 
     //If not exists required fields
-    if(!req.body.userId || !req.body.cart || !req.body.shipping || !req.body.billing ) return res.status(400).send({status: 400, message: 'Bad request'})
+    if(!req.body.cart || !req.body.shipping || !req.body.billing ) return res.status(400).send({status: 400, message: 'Bad request'})
 
     let order = new Order(req.body);
 
