@@ -40,18 +40,34 @@ router.put('/:id', auth.isAuth, BookCtrl.updateBook);
 
 
 router.post('/change-image', (req, res) => {
-    Book.find({ image: { "$regex": /assets\/img\/books/i, "$options": "i" } })
+    Book.find({ image: { "$regex": /.jpg/i, "$options": "i" } })
         .exec((err, books) => {
             
             for (let i = 0; i < books.length; i++) {
-                books[i].image = books[i].image.replace('assets/img/books', 'uploads/books')
+                books[i].image = books[i].image.replace('.jpg', '.png')
 
                 books[i].save((err, saved) => {
                     if(err) return res.send(500)
                 })
             }
 
-            return books;
+            return res.send(books);
+        })
+});
+
+router.post('/add-version', (req, res) => {
+    Book.find()
+        .exec((err, books) => {
+            
+            for (let i = 0; i < books.length; i++) {
+                books[i].version = ["PAPER"]
+
+                books[i].save((err, saved) => {
+                    if(err) return res.send(500)
+                })
+            }
+
+            return res.send(books);
         })
 });
 

@@ -31,10 +31,9 @@
                 <tbody>
 
                     {{#each products}}
-                    <p>{{@index}}. {{this}}</p>
                     <tr>
                         <td style="box-sizing: border-box; border: 1px solid #e0e0e0; padding: 10px 15px;">
-                            {{ this.this }}
+                            {{getBookTitle this @index}}
                         </td>
                         <td style="box-sizing: border-box; border: 1px solid #e0e0e0; padding: 10px 15px;">
                             {{ this.quantity }}

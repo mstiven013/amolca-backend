@@ -3,11 +3,15 @@
 const config = require('../../config');
 const nodemailer = require('nodemailer');
 const handlebars = require('handlebars');
-const assemble = require('assemble');
 const hbsHelpers = require('handlebars-helpers');
+const allHelpers = hbsHelpers.math();
 const moment = require('moment');
 const fs = require('fs');
 const controller = {};
+
+handlebars.registerHelper('getBookTitle', function(arr, id) {
+    return arr[id].title
+});
 
 const readHTMLFile = function(path, callback) {
     fs.readFile(path, {encoding: 'utf-8'}, function (err, html) {

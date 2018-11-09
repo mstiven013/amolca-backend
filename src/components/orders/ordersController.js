@@ -6,8 +6,8 @@ const email = require('../emails/emailsOrders');
 
 //"Related Products" Populate var
 const populateProducts = { 
-    path: 'cart.products.this', 
-    select: '-__v -relatedProducts -specialty -publicationYear -userId -attributes -variations -volume -inventory.individualSale -inventory.allowReservations -inventory.isbn'
+    path: 'products.this', 
+    select: '-_id -registerDate -__v -relateProducts -specialty -publicationYear -userId -attributes -variations -volume -inventory.individualSale -inventory.allowReservations -isbn -metaTitle -metaDescription -metaTags -author -relatedProducts -version -visibility -countries -description -index -interest -state -kind -keyPoints -numberPages -slug -image'
 };
 
 //"User" Populate var
@@ -19,7 +19,8 @@ const populateUserId = {
 //"Cart" Populate var
 const populateCart = {
     path: 'cart',
-    select: '-__v'
+    select: '-__v',
+    populate: [ populateProducts ]
 }
 
 async function getAllOrders(req, res) {

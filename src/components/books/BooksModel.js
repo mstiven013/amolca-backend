@@ -53,7 +53,7 @@ const bookSchema = new Schema({
     }],
     version: [{
         type: String,
-        default: "PAPER",
+        default: ["PAPER"],
         enum: ["PAPER", "EBOOK", "VIDEO"]
     }],
     attributes: [
