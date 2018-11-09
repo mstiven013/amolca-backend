@@ -42,7 +42,7 @@ controller.createOrder = (info) => {
 
         try {
 
-            readHTMLFile(__dirname + '../../../public/email/new-order-client.html', function(err, html) {
+            readHTMLFile('/../../../public/email/new-order-client.html', function(err, html) {
                 var template = handlebars.compile(html);
                 var replacements = {
                     orderId: info._id,
