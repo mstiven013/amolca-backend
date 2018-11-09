@@ -14,7 +14,7 @@ const AuthorSchema = new Schema({
     birthday: Date,
     image: {
         type: String,
-        default: 'no-author-image.png'
+        default: 'https://amolca.webussines.com/uploads/authors/no-author-image.png'
     },
     registerDate: {
         type: Date,
