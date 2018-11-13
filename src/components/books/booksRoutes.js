@@ -71,4 +71,27 @@ router.post('/add-version', (req, res) => {
         })
 });
 
+router.post('/change-specialty', (req, res) => {
+    Book.find({ interest: ["5bbba1737a4f39001363ebbb"] })
+        .exec((err, books) => {
+
+            for (let i = 0; i < books.length; i++) {
+                for (let index = 0; index < books[i].interest.length; index++) {
+                    if(books[i].interest[index] == "5bbba1197a4f39001363ebaf") {
+                        console.log(books[i].title)
+                        books[i].interest[index] = "5bbba0ff7a4f39001363ebae";
+                    }
+                }
+            }
+
+            for (let i = 0; i < books.length; i++) {
+                books[i].save((err, saved) => {
+                    if(err) return res.send(500)
+                })
+            }
+
+            return res.send(books);
+        })
+});
+
 module.exports = router;

@@ -45,7 +45,16 @@ const PostSchema = new Schema({
     metaTitle: String,
     metaDescription: String,
     metaTags: [{ type: String }]
-}, options);
+}, options)
+
+PostSchema.index( 
+    {
+        title: "text",
+        slug: "text",
+        description: "text",
+        publicationYear: "text"
+    }
+)
 
 const Post = mongoose.model('Post', PostSchema)
 

@@ -8,6 +8,18 @@ const PostCtrl = require('./postsController');
 
 const auth = require('../auth/authMiddleware');
 
+router.get('/searcher', (req, res) => {
+
+    let q = '' + req.query.query + '';
+    console.log(q);
+
+    Post.find({ $text: { $search: q } })
+        .exec((err, posts) => {
+            if(err) { return res.status(500).send(err) }
+            return res.send(posts);
+        })
+});
+
 //Get all posts
 router.get('/', PostCtrl.getAllPosts);
 
