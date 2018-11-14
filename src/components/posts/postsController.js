@@ -13,6 +13,30 @@ const populateUserId = {
     select: '-__v -signupDate -products -posts -role'
 };
 
+//"Related products" Populate var
+const populateRelatedProducts = { 
+    path: 'relatedProducts', 
+    select: '-__v -relatedProducts -specialty -publicationYear -userId -attributes -variations -volume -inventory.individualSale -inventory.allowReservations -isbn -metaTitle -metaDescription -metaTags -kind'
+};
+
+//"Author" Populate var
+const populateAuthor = { 
+    path: 'author', 
+    select: '-__v -registerDate -specialty -metaTitle -metaDescription -metaTags'
+};
+
+//"Specialty" populate
+const populateSpecialty = {
+    path: 'specialty',
+    select: '-__v -registerDate -metaTitle -metaDescription -metaTags -childs -parent -image -description -top'
+}
+
+//"Interest" populate
+const populateInterest = {
+    path: 'interest',
+    select: '-__v -registerDate -metaTitle -metaDescription -metaTags -childs -parent -image -description -top'
+}
+
 //Controller function to get all posts
 controller.getAllPosts = function(req, res) {
 
@@ -69,7 +93,11 @@ controller.searchPosts = function(req, res) {
     let q = req.query.s;
 
     GlobalPost.find({ $text: { $search: "\"" + q + "\"" } })
+        .populate(populateRelatedProducts)
         .populate(populateUserId)
+        .populate(populateAuthor)
+        .populate(populateSpecialty)
+        .populate(populateInterest)
         .limit(limit)
         .sort(sort)
         .exec((err, posts) => {
