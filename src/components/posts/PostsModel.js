@@ -49,14 +49,24 @@ const PostSchema = new Schema({
 
 PostSchema.index( 
     {
-        title: "text",
-        slug: "text",
-        description: "text",
-        publicationYear: "text"
+        title: 'text',
+        slug: 'text',
+        description: 'text',
+        publicationYear: 'text',
+        index: 'text',
+        isbn: 'text'
     }
 )
 
 const Post = mongoose.model('Post', PostSchema)
+
+/*
+    Post.collection.dropAllIndexes(function(err, results) {
+        if(err) return console.log('error:', err)
+
+        console.log(results)
+    });
+*/
 
 module.exports = mongoose.model('Post', PostSchema);
 //module.exports = Post.discriminator('BookPost', bookSchema);

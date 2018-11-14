@@ -1,9 +1,11 @@
 'use strict'
 
 const mongoose = require('mongoose');
+const GlobalPost = require('./PostsModel');
 const Post = require('./BlogsModel');
 const Comment = require('../comments/CommentsModel');
-const All = require('./PostsModel');
+
+const controller = {};
 
 //"User" Populate var
 const populateUserId = { 
@@ -12,11 +14,11 @@ const populateUserId = {
 };
 
 //Controller function to get all posts
-async function getAllPosts(req, res) {
+controller.getAllPosts = function(req, res) {
 
     let limit = 100000;
-    let sortKey = 'name';
-    let sortOrder = 1;
+    let sortKey = 'title';
+    let sortOrder = -1;
 
     if(req.query.limit) {
         limit = parseInt(req.query.limit);
@@ -47,8 +49,38 @@ async function getAllPosts(req, res) {
         })
 }
 
+controller.searchPosts = function(req, res) {
+
+    let limit = 1000;
+    let sortKey = 'title';
+    let sortOrder = -1;
+    
+    if(req.query.limit) {
+        limit = parseInt(req.query.limit);
+    }
+    if(req.query.orderby) {
+        sortKey = req.query.orderby;
+    }
+    if(req.query.order) {
+        sortOrder = req.query.order;
+    }
+
+    let sort = {[sortKey]: sortOrder};
+    let q = req.query.s;
+
+    GlobalPost.find({ $text: { $search: "\"" + q + "\"" } })
+        .populate(populateUserId)
+        .limit(limit)
+        .sort(sort)
+        .exec((err, posts) => {
+            if(err) { return res.status(500).send(err) }
+
+            return res.send(posts);
+        })
+}
+
 //Controller function to get One Post by Id
-async function getPostsById(req, res) {
+controller.getPostsById = function(req, res) {
     let postId = req.params.id;
 
     Post.findById(postId)
@@ -66,16 +98,16 @@ async function getPostsById(req, res) {
 }
 
 //Controller function to get Posts by Category
-async function getPostsByCategory(req, res) {
+controller.getPostsByCategory = function(req, res) {
 
 }
 
 //Controller function to get Posts by state
-async function getPostsByState(req, res) {
+controller.getPostsByState = function(req, res) {
     let state = req.params.state.toUpperCase();
     let limit = 100000;
-    let sortKey = 'name';
-    let sortOrder = 1;
+    let sortKey = 'title';
+    let sortOrder = -1;
 
     if(req.query.limit) {
         limit = parseInt(req.query.limit);
@@ -105,7 +137,7 @@ async function getPostsByState(req, res) {
 }
 
 //Controller function to get one Post by Slug
-async function getPostsBySlug(req, res) {
+controller.getPostsBySlug = function(req, res) {
     let postSlug = req.params.slug;
 
     Post.findOne({ slug: postSlug })
@@ -122,11 +154,10 @@ async function getPostsBySlug(req, res) {
 }
 
 //Controller function to get comments by Post ID
-async function getCommentsByPostId(req, res) {
-    console.log(req.params.id)
+controller.getCommentsByPostId = function(req, res) {
     let limit = 100000;
     let sortKey = 'post';
-    let sortOrder = 1;
+    let sortOrder = -1;
 
     if(req.query.limit) {
         limit = parseInt(req.query.limit);
@@ -156,7 +187,7 @@ async function getCommentsByPostId(req, res) {
 }
 
 //Controller function to create one post
-async function createPost(req, res) {
+controller.createPost = function(req, res) {
     if(!req.body.userId || !req.body.title || !req.body.slug) {
         return res.status(400).send({status: 400, message: 'Bad request'})
     }
@@ -180,7 +211,7 @@ async function createPost(req, res) {
     });
 }
 
-async function deletePost(req, res) {
+controller.deletePost = function(req, res) {
     Post.findById(req.params.id, (err, post) => {
         //If post not exists
         if(!post) return res.status(404).send({status: 404, message: 'This resource not exists'})
@@ -197,7 +228,7 @@ async function deletePost(req, res) {
     });  
 }
 
-async function updatePost(req, res) {
+controller.updatePost = function(req, res) {
     let postId = req.params.id;
     let update = req.body;
 
@@ -214,14 +245,4 @@ async function updatePost(req, res) {
         });
 }
 
-module.exports = {
-    getAllPosts,
-    getPostsById,
-    getPostsByCategory,
-    getPostsByState,
-    getPostsBySlug,
-    getCommentsByPostId,
-    createPost,
-    deletePost,
-    updatePost
-}
+module.exports = controller;

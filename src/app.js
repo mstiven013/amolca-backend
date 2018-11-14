@@ -59,7 +59,6 @@ mongoose.connect( config.db, config.dbAuth, (err, client) => {
         return console.log('DB connection error.');
     }
     console.log('Mongo DB is connected');
-    console.log(mongoose.models.Post)
 
     app.listen(config.port, () => {
         console.log('Server on port:', config.port);
