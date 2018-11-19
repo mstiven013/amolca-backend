@@ -10,7 +10,7 @@ const fs = require('fs');
 const controller = {};
 
 handlebars.registerHelper('getBookTitle', function(arr, id) {
-    return arr[id].title
+    return arr.this.title
 });
 
 const readHTMLFile = function(path, callback) {
@@ -42,7 +42,7 @@ controller.createOrder = (info) => {
 
         try {
 
-            readHTMLFile('/../../../public/email/new-order-client.html', function(err, html) {
+            readHTMLFile('src/public/email/new-order-client.html', function(err, html) {
                 var template = handlebars.compile(html);
                 var replacements = {
                     orderId: info._id,
