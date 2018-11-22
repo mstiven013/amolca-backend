@@ -5,7 +5,7 @@ const config = {
     version: '1.0',
     api: '/api/',
     port: process.env.PORT || 3000,
-    mailer: {
+    mailer: { 
         cc: 'mstiven013@gmail.com',
         user: 'mstiven013@gmail.com',
         pass: 'SoloNacional960723',
