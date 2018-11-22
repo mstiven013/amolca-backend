@@ -6,11 +6,12 @@ const config = {
     api: '/api/',
     port: process.env.PORT || 3000,
     mailer: {
+        cc: 'mstiven013@gmail.com',
         user: 'mstiven013@gmail.com',
         pass: 'SoloNacional960723',
-        service: 'gmail',
-        host: 'smtp.gmail.com',
-        port: 465
+        service: 'webussines.com',
+        host: 'webussines.com',
+        port: 25
     },
     secret: 'mysecretkeyapi',
     dbPass: encodeURIComponent('AmolcaColombia%2018'),    

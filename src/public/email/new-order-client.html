@@ -77,20 +77,18 @@
                 <p style="color: #00396F; border-bottom: 1px solid #e0e0e0; font-size: 20px; font-weight: bold; padding-bottom: 20px;">
                     Detalles del cliente
                 </p>
-                <p><b>Nombre:</b> {{user.name}} {{user.lastname}}</p>
-                <p><b>Correo electrónico:</b> {{user.email}}</p>
-                <p><b>País:</b> {{user.country}}</p>
+                <p><b>Nombre:</b> {{billing.name}} {{billing.lastname}}</p>
+                <p><b>Correo electrónico:</b> {{billing.email}}</p>
+                <p><b>País:</b> {{billing.country}}</p>
             </div>
             
             <div style="margin: 20px auto 30px;">
                 <p style="color: #00396F; border-bottom: 1px solid #e0e0e0; font-size: 20px; font-weight: bold; padding-bottom: 20px;">
                     Dirección de envío
                 </p>
-                <p><b>Teléfono:</b> +57 (4) 509 9574</p>
-                <p><b>Celular:</b> +57 311 788 2517</p>
+                <p><b>Celular:</b> {{shipping.phone}}</p>
                 <p>
-                    <b>Dirección:</b> Carrera 70 #43-42 Of. 221 Centro Comercial San Juan 70.<br/>
-                    Medellín, Colombia.
+                    <b>Dirección:</b> {{shipping.address}}
                 </p>
             </div>
 
@@ -98,11 +96,9 @@
                 <p style="color: #00396F; border-bottom: 1px solid #e0e0e0; font-size: 20px; font-weight: bold; padding-bottom: 20px;">
                     Dirección de facturación
                 </p>
-                <p><b>Teléfono:</b> +57 (4) 509 9574</p>
-                <p><b>Celular:</b> +57 311 788 2517</p>
+                <p><b>Celular:</b> {{billing.phone}}</p>
                 <p>
-                    <b>Dirección:</b> Carrera 70 #43-42 Of. 221 Centro Comercial San Juan 70.<br/>
-                    Medellín, Colombia.
+                    <b>Dirección:</b> {{billing.address}}
                 </p>
             </div>
 

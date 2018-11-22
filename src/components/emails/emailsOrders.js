@@ -6,6 +6,7 @@ const handlebars = require('handlebars');
 const hbsHelpers = require('handlebars-helpers');
 const allHelpers = hbsHelpers.math();
 const moment = require('moment');
+const sendmail = require('sendmail')();
 const fs = require('fs');
 const controller = {};
 
@@ -29,11 +30,11 @@ const smtpTransport = nodemailer.createTransport({
     service: config.mailer.service,
     host: config.mailer.host,
     port: config.mailer.port,
-    secure: true,
-    auth: {
+    //secure: true,
+    /*auth: {
         user: config.mailer.user,
         pass: config.mailer.pass
-    }
+    }*/
 });
 
 controller.createOrder = (info) => {
@@ -49,32 +50,54 @@ controller.createOrder = (info) => {
                     orderDate: moment(info.registerDate).format('LL'),
                     orderTotal: info.cart[0].total,
                     products: info.cart[0].products,
-                    user: info.userId[0],
                     shipping: info.shipping,
                     billing: info.billing
                 };
+
+                if(info.userId) {
+                    replacements.user = info.userId[0];
+                }
+
                 var htmlToSend = template(replacements);
         
-                const mailOptions = {
+                /*const mailOptions = {
                     from: `Amolca Colombia <info@amolca.com.co>`,
-                    to: info.userId[0].email,
+                    to: info.billing.email,
+                    cc: config.mailer.cc,
                     subject: `Registro de nuevo pedido - Amolca`,
                     text: `Se ha registrado un nuevo pedido en Amolca`,
                     html: htmlToSend
-                }
+                }*/
+
+                sendmail({
+                    from: `Amolca Colombia <info@amolca.com.co>`,
+                    to: info.billing.email,
+                    cc: config.mailer.cc,
+                    subject: `Registro de nuevo pedido - Amolca`,
+                    html: htmlToSend
+                }, (err, reply) => {
+                    if(err) {
+                        console.log('Error enviando el email')
+                        return rej({ status: 500, message: `An error has ocurred sending the message to your email` });
+                    } else {
+                        console.log('Enviado correctamente')
+                        //Send status and user stored
+                        return res('Enviado correctamente');
+                    }
+                })
             
-                smtpTransport.sendMail(mailOptions, (err, response) => {
+                /*smtpTransport.sendMail(mailOptions, (err, response) => {
             
                     if(err) {
                         console.log('Error enviando el email') 
                         console.log(err)
-                        return res.status(500).send({ status: 500, message: `An error has ocurred sending the message to your email` });
+                        return rej({ status: 500, message: `An error has ocurred sending the message to your email` });
                     } else {
                         console.log('Enviado correctamente')
                         //Send status and user stored
-                        return res.status(201).send({'access_token': TokenService.createToken(user), user: user});
+                        return rej('Enviado correctamente');
                     }
-                });
+                });*/
         
             });
 

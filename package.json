@@ -27,6 +27,7 @@
     "nodemailer": "^4.6.8",
     "nodemon": "^1.17.5",
     "npm": "^6.4.1",
+    "sendmail": "^1.4.1",
     "xoauth2": "^1.2.0"
   },
   "devDependencies": {

@@ -38,7 +38,6 @@ router.delete('/:id', auth.isAuth, BookCtrl.deleteBook);
 //Update book
 router.put('/:id', auth.isAuth, BookCtrl.updateBook);
 
-
 router.post('/change-image', (req, res) => {
     Book.find({ image: { "$regex": /.jpg/i, "$options": "i" } })
         .exec((err, books) => {
@@ -92,6 +91,33 @@ router.post('/change-specialty', (req, res) => {
 
             return res.send(books);
         })
+});
+
+router.post('/add-prices', (req, res) => {
+
+    var results = [];
+
+    for (let i = 0; i < req.body.length; i++) {
+        const el = req.body[i];
+        Book.find({"isbn": el.isbn})
+            .exec((err, book) => {
+                if(err) return res.status(500).send('error')
+                
+                for (let index = 0; index < book.length; index++) {
+                    const element = book[index];
+
+                    element.countries = req.body[i].countries;
+
+                    element.save((err, saved) => {
+                        //if(err) return res.send('error' + err)
+                    })
+                    
+                }
+            });
+    }
+
+    return res.status(200).send(results)
+
 });
 
 module.exports = router;
