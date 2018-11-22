@@ -6,9 +6,8 @@ const config = {
     api: '/api/',
     port: process.env.PORT || 3000,
     mailer: { 
-        cc: 'mstiven013@gmail.com',
+        cc: 'gerencia@amolca.com.co, asistentepresidencia@amolca.us',
         user: 'mstiven013@gmail.com',
-        pass: 'SoloNacional960723',
         service: 'webussines.com',
         host: 'webussines.com',
         port: 25

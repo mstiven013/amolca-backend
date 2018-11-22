@@ -59,18 +59,9 @@ controller.createOrder = (info) => {
                 }
 
                 var htmlToSend = template(replacements);
-        
-                /*const mailOptions = {
-                    from: `Amolca Colombia <info@amolca.com.co>`,
-                    to: info.billing.email,
-                    cc: config.mailer.cc,
-                    subject: `Registro de nuevo pedido - Amolca`,
-                    text: `Se ha registrado un nuevo pedido en Amolca`,
-                    html: htmlToSend
-                }*/
 
                 sendmail({
-                    from: `Amolca Colombia <info@amolca.com.co>`,
+                    from: `Amolca Colombia <ventas@amolca.com.co>`,
                     to: info.billing.email,
                     cc: config.mailer.cc,
                     subject: `Registro de nuevo pedido - Amolca`,
