@@ -62,10 +62,14 @@ controller.getSpecialtiesBySlug = async function(req, res) {
 //Controller function to get Books by Specialties
 controller.getBooksBySpecialty = async function(req, res) {
 
+    let skip = 0;
     let limit = 100000;
     let sortKey = 'name';
     let sortOrder = 1;
 
+    if(req.query.skip) {
+        skip = parseInt(req.query.skip);
+    }
     if(req.query.limit) {
         limit = parseInt(req.query.limit);
     }
@@ -83,6 +87,7 @@ controller.getBooksBySpecialty = async function(req, res) {
         .populate({ path: 'relatedProducts', select: '-__v -relatedProducts -specialty -publicationYear -userId -attributes -variations -volume -inventory.individualSale -inventory.allowReservations -inventory.isbn'})
         .populate({ path: 'userId', select: '-__v -signupDate -products -posts -role '})
         .populate({ path: 'author', select: '-__v -registerDate -specialty '})
+        .skip(skip)
         .limit(limit)
         .sort(sort)
         .exec((err, books) => {

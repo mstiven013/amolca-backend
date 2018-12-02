@@ -37,10 +37,14 @@ const populateInterest = {
 
 //Controller function to get ALL Books
 controller.getAllBooks = (req, res) => {
+    let skip = 0;
     let limit = 100000;
     let sortKey = 'title';
     let sortOrder = 1;
 
+    if(req.query.skip) {
+        skip = parseInt(req.query.skip);
+    }
     if(req.query.limit) {
         limit = parseInt(req.query.limit);
     }
@@ -60,6 +64,7 @@ controller.getAllBooks = (req, res) => {
         .populate(populateAuthor)
         .populate(populateSpecialty)
         .populate(populateInterest)
+        .skip(skip)
         .limit(limit)
         .sort(sort)
         .exec((err, books) => {
