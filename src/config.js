@@ -20,7 +20,11 @@ const config = {
             user: 'amolca', 
             password: 'AmolcaColombia%2018' 
         },
-        connectTimeoutMS: 30000000
+        connectTimeoutMS: 300000,
+        socketTimeoutMS: 300000,
+        keepAlive: true,
+        keepAliveInitialDelay: 300000,
+        reconnectTries: 10
     },
     //db: 'mongodb://localhost:27017/amolca-store',
     db: `mongodb+srv://amolca:${this.dbPass}@amolcaweb2018-pxfid.mongodb.net/test`
