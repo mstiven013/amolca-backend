@@ -67,7 +67,7 @@ mongoose.connect( config.db, config.dbOptions, (err, client) => {
 
 mongoose.connection.on('disconnected', function() {
     //Reconnect on timeout
-    mongoose.connect( config.db, config.dbAuth, (err, client) => {  
+    mongoose.connect( config.db, config.dbOptions, (err, client) => {  
         if(err) {
             return console.log('DB connection error.');
         }
