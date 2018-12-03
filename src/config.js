@@ -24,7 +24,9 @@ const config = {
         socketTimeoutMS: 300000,
         keepAlive: true,
         keepAliveInitialDelay: 300000,
-        reconnectTries: 10
+        reconnectTries: 10,
+        useCreateIndex: true,
+        useNewUrlParser: true
     },
     //db: 'mongodb://localhost:27017/amolca-store',
     db: `mongodb+srv://amolca:${this.dbPass}@amolcaweb2018-pxfid.mongodb.net/test`

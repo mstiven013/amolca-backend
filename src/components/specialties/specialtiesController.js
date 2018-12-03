@@ -84,6 +84,7 @@ controller.getBooksBySpecialty = async function(req, res) {
     let specialtyId = req.params.id;
 
     Book.find({specialty: specialtyId})
+        .maxTimeMS(300000)
         .populate({ path: 'relatedProducts', select: '-__v -relatedProducts -specialty -publicationYear -userId -attributes -variations -volume -inventory.individualSale -inventory.allowReservations -inventory.isbn'})
         .populate({ path: 'userId', select: '-__v -signupDate -products -posts -role '})
         .populate({ path: 'author', select: '-__v -registerDate -specialty '})
