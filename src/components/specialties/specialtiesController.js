@@ -83,23 +83,28 @@ controller.getBooksBySpecialty = async function(req, res) {
     let sort = {[sortKey]: sortOrder};
     let specialtyId = req.params.id;
 
-    Book.find({specialty: specialtyId})
-        .maxTimeMS(300000)
-        .populate({ path: 'relatedProducts', select: '-__v -relatedProducts -specialty -publicationYear -userId -attributes -variations -volume -inventory.individualSale -inventory.allowReservations -inventory.isbn'})
-        .populate({ path: 'userId', select: '-__v -signupDate -products -posts -role '})
-        .populate({ path: 'author', select: '-__v -registerDate -specialty '})
-        .skip(skip)
-        .limit(limit)
-        .sort(sort)
-        .exec((err, books) => {
-            //If book not exists
-            if(!books) return res.status(404).send({status: 404, message: 'This specialty not have books registered'});
+    var total = 0;
 
-            //If an error has ocurred
-            if(err) return res.status(500).send({status: 500, message: `An error has ocurred in server: ${err}`});
+    Book.count({specialty: specialtyId}, (err, counting) => {
+        
+        Book.find({specialty: specialtyId})
+            .maxTimeMS(300000)
+            .populate({ path: 'relatedProducts', select: '-__v -relatedProducts -specialty -publicationYear -userId -attributes -variations -volume -inventory.individualSale -inventory.allowReservations -inventory.isbn'})
+            .populate({ path: 'userId', select: '-__v -signupDate -products -posts -role '})
+            .populate({ path: 'author', select: '-__v -registerDate -specialty '})
+            .skip(skip)
+            .limit(limit)
+            .sort(sort)
+            .exec((err, books) => {
+                //If book not exists
+                if(!books) return res.status(404).send({status: 404, message: 'This specialty not have books registered'});
 
-            return res.status(200).send(books);
-        });
+                //If an error has ocurred
+                if(err) return res.status(500).send({status: 500, message: `An error has ocurred in server: ${err}`});
+
+                return res.status(200).send({books: books, count: counting});
+            });
+    });
 }
 
 controller.createSpecialty = async function(req, res) {
