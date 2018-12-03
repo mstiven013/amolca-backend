@@ -63,16 +63,16 @@ controller.getSpecialtiesBySlug = async function(req, res) {
 controller.getBooksBySpecialty = async function(req, res) {
 
     let skip = 0;
-    let limit = 400;
+    let limit = 1000;
     let sortKey = 'name';
     let sortOrder = 1;
 
     if(req.query.skip) {
         skip = parseInt(req.query.skip);
     }
-    /*if(req.query.limit) {
+    if(req.query.limit) {
         limit = parseInt(req.query.limit);
-    }*/
+    }
     if(req.query.orderby) {
         sortKey = req.query.orderby;
     }

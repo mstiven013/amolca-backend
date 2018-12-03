@@ -38,7 +38,7 @@ const populateInterest = {
 //Controller function to get ALL Books
 controller.getAllBooks = (req, res) => {
     let skip = 0;
-    let limit = 100000;
+    let limit = 1000;
     let sortKey = 'title';
     let sortOrder = 1;
 
@@ -146,7 +146,7 @@ controller.getBooksByIsbn = (req, res) => {
 controller.getBooksByPublication = (req, res) => {
     let year = req.params.year;
 
-    let limit = 100000;
+    let limit = 1000;
     let sortKey = 'title';
     let sortOrder = 1;
 
@@ -186,7 +186,7 @@ controller.getBooksByPublication = (req, res) => {
 //Controller function to get Books by state
 controller.getBooksByState = (req, res) => {
     let state = req.params.state.toUpperCase();
-    let limit = 100000;
+    let limit = 1000;
     let sortKey = 'title';
     let sortOrder = 1;
 

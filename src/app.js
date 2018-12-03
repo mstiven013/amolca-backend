@@ -54,7 +54,7 @@ app.use(API_URL + '/uploads', require('./components/uploads/uploadsRoutes'));
 //Static files
 app.use(express.static(__dirname + '/public'));
 
-mongoose.connect( config.db, config.dbAuth, (err, client) => {  
+mongoose.connect( config.db, config.dbOptions, (err, client) => {  
     if(err) {
         return console.log('DB connection error.');
     }
@@ -77,6 +77,4 @@ mongoose.connection.on('disconnected', function() {
             console.log('Server on port:', config.port);
         });
     })
-
-    db = mongoose.connection;
 })
