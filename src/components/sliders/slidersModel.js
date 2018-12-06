@@ -9,7 +9,8 @@ const itemSubSchema = new Schema({
     bgAttach: { type: String, default: "initial" },
     state: { type: Boolean, default: true },
     text: { type: String },
-    linkSlide: { type: String }
+    linkSlide: { type: String },
+    order: { type: Number }
 }, { _id: false });
 
 const SliderSchema = new Schema({

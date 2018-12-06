@@ -6,7 +6,7 @@ const Slider = require('./slidersModel');
 const controller = {};
 
 //Get All sliders
-controller.getAllSliders = (req, res) => {
+controller.getAllSliders = async (req, res) => {
     const sliders = await Slider.find();
     res.send(sliders);
 }
@@ -41,7 +41,7 @@ controller.createSlider = (req, res) => {
         return res.status(400).send({status: 400, message: 'Bad request'})
     }
 
-    let slider = new Slider(data);
+    let slider = new Slider(req.body);
 
     slider.save((err, stored) => {
         //If slider already exists
