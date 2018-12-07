@@ -102,7 +102,17 @@ controller.getBooksBySpecialty = async function(req, res) {
                 //If an error has ocurred
                 if(err) return res.status(500).send({status: 500, message: `An error has ocurred in server: ${err}`});
 
-                return res.status(200).send({books: books, count: counting});
+                let array = [];
+
+                for (let i = 0; i < books.length; i++) {
+                    const element = books[i];
+
+                    if(element.state !== 'DRAFT' && book.state == 'TRASH') {
+                        array.push(element);
+                    }
+                }
+
+                return res.status(200).send({books: array, count: counting});
             });
     });
 }

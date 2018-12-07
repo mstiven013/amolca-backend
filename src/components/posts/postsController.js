@@ -103,7 +103,17 @@ controller.searchPosts = function(req, res) {
         .exec((err, posts) => {
             if(err) { return res.status(500).send(err) }
 
-            return res.send(posts);
+            let array = [];
+
+            for (let i = 0; i < posts.length; i++) {
+                const element = posts[i];
+
+                if(element.state !== 'DRAFT') {
+                    array.push(element);
+                }
+            }
+
+            return res.status(200).send(array);
         })
 }
 

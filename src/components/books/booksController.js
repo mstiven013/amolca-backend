@@ -74,7 +74,17 @@ controller.getAllBooks = (req, res) => {
             //If not exists books in db
             if(!books) return res.status(404).send({status: 404, message: `Not exists books in db`})
 
-            return res.status(200).send(books);
+            let array = [];
+
+            for (let i = 0; i < books.length; i++) {
+                const element = books[i];
+
+                if(element.state !== 'DRAFT') {
+                    array.push(element);
+                }
+            }
+
+            return res.status(200).send(array);
         })
 }
 
@@ -117,6 +127,10 @@ controller.getBooksBySlug = (req, res) => {
             //If an error has ocurred
             if(err) return res.status(500).send({status: 500, message: `An error has ocurred in server: ${err}`});
 
+            if(book.state == 'DRAFT' || book.state !== 'TRASH') {
+                return res.status(404).send({status: 404, message: 'This resource not exists'});
+            }
+
             return res.status(200).send(book);
         });
 }
@@ -138,7 +152,17 @@ controller.getBooksByIsbn = (req, res) => {
             //If an error has ocurred
             if(err) return res.status(500).send({status: 500, message: `An error has ocurred in server: ${err}`});
 
-            return res.status(200).send(books);
+            let array = [];
+
+            for (let i = 0; i < books.length; i++) {
+                const element = books[i];
+
+                if(element.state !== 'DRAFT' && element.state !== 'TRASH') {
+                    array.push(element);
+                }
+            }
+
+            return res.status(200).send(array);
         });
 }
 
@@ -175,11 +199,19 @@ controller.getBooksByPublication = (req, res) => {
             if(!books) return res.status(404).send({status: 404, message: 'Not exists books publicated in this year'});
 
             //If an error has ocurred
-            if(err) 
-                console.log(err)
-                return res.status(500).send({status: 500, message: `An error has ocurred in server: ${err}`});
+            if(err) return res.status(500).send({status: 500, message: `An error has ocurred in server: ${err}`});
 
-            return res.status(200).send(books);
+            let array = [];
+
+            for (let i = 0; i < books.length; i++) {
+                const element = books[i];
+
+                if(element.state !== 'DRAFT' && element.state !== 'TRASH') {
+                    array.push(element);
+                }
+            }
+
+            return res.status(200).send(array);
         });
 }
 
@@ -217,7 +249,17 @@ controller.getBooksByState = (req, res) => {
             //If an error has ocurred
             if(err) return res.status(500).send({status: 500, message: `An error has ocurred in server: ${err}`});
 
-            return res.status(200).send(books);
+            let array = [];
+
+            for (let i = 0; i < books.length; i++) {
+                const element = books[i];
+
+                if(element.state !== 'DRAFT' && element.state !== 'TRASH') {
+                    array.push(element);
+                }
+            }
+
+            return res.status(200).send(array);
         });
 }
 
