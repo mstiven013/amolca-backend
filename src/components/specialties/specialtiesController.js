@@ -107,7 +107,7 @@ controller.getBooksBySpecialty = async function(req, res) {
                 for (let i = 0; i < books.length; i++) {
                     const element = books[i];
 
-                    if(element.state !== 'DRAFT' && book.state == 'TRASH') {
+                    if(element.state !== 'DRAFT' && element.state == 'TRASH') {
                         array.push(element);
                     }
                 }
