@@ -127,7 +127,7 @@ controller.getBooksBySlug = (req, res) => {
             //If an error has ocurred
             if(err) return res.status(500).send({status: 500, message: `An error has ocurred in server: ${err}`});
 
-            if(book.state == 'DRAFT' || book.state !== 'TRASH') {
+            if(book.state == 'DRAFT' || book.state == 'TRASH') {
                 return res.status(404).send({status: 404, message: 'This resource not exists'});
             }
 
