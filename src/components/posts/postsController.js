@@ -3,6 +3,7 @@
 const mongoose = require('mongoose');
 const GlobalPost = require('./PostsModel');
 const Post = require('./BlogsModel');
+const Author = require('../authors/AuthorsModel');
 const Comment = require('../comments/CommentsModel');
 
 const controller = {};
@@ -113,7 +114,40 @@ controller.searchPosts = function(req, res) {
                 }
             }
 
-            return res.status(200).send(array);
+            if(array.length < 1) {
+                Author.find({ $text: { $search: "\"" + q + "\"" } })
+                    .exec((err, authors) => {
+
+                        let authorIds = [];
+                        for (let a = 0; a < authors.length; a++) {
+                            authorIds.push(authors[a]._id);
+                        }
+
+                        GlobalPost.find({ author: { $in: authorIds } })
+                            .populate(populateRelatedProducts)
+                            .populate(populateUserId)
+                            .populate(populateAuthor)
+                            .populate(populateSpecialty)
+                            .populate(populateInterest)
+                            .exec((err, authorbooks) => {
+                                if(err) return console.log(err)
+
+                                let arrBooks = [];
+
+                                for (let i = 0; i < authorbooks.length; i++) {
+                                    const element = authorbooks[i];
+
+                                    if(element.state !== 'DRAFT') {
+                                        arrBooks.push(element);
+                                    }
+                                }
+
+                                return res.status(200).send(arrBooks)
+                            })
+                    });
+            } else {
+                return res.status(200).send(array);
+            }
         })
 }
 

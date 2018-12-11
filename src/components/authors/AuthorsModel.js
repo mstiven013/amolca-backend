@@ -34,6 +34,13 @@ const AuthorSchema = new Schema({
     metaTags: [{ type: String }]
 })
 
+AuthorSchema.index( 
+    {
+        name: 'text',
+        description: 'text'
+    }
+)
+
 const Author = mongoose.model('Author', AuthorSchema)
 
 module.exports = mongoose.model('Author', AuthorSchema);
