@@ -37,8 +37,8 @@ const smtpTransport = nodemailer.createTransport({
     }*/
 });
 
-controller.createOrder = (info) => {
-
+controller.createOrder = (order, mailer) => {
+    
     const email = new Promise( (res, rej) => {
 
         try {
@@ -46,25 +46,26 @@ controller.createOrder = (info) => {
             readHTMLFile('src/public/email/new-order-client.html', function(err, html) {
                 var template = handlebars.compile(html);
                 var replacements = {
-                    orderId: info._id,
-                    orderDate: moment(info.registerDate).format('LL'),
-                    orderTotal: info.cart[0].total,
-                    products: info.cart[0].products,
-                    shipping: info.shipping,
-                    billing: info.billing
+                    orderId: order._id,
+                    orderDate: moment(order.registerDate).format('LL'),
+                    orderTotal: order.cart[0].total,
+                    products: order.cart[0].products,
+                    shipping: order.shipping,
+                    billing: order.billing,
+                    domain: mailer.domain
                 };
 
-                if(info.userId) {
-                    replacements.user = info.userId[0];
+                if(order.userId) {
+                    replacements.user = order.userId[0];
                 }
 
                 var htmlToSend = template(replacements);
 
                 sendmail({
-                    from: `Amolca Colombia <ventas@amolca.com.co>`,
-                    to: info.billing.email,
-                    cc: config.mailer.cc,
-                    subject: `Registro de nuevo pedido - Amolca`,
+                    from: mailer.from,
+                    to: order.billing.email,
+                    cc: mailer.cc,
+                    subject: mailer.subject,
                     html: htmlToSend
                 }, (err, reply) => {
                     if(err) {
@@ -76,26 +77,12 @@ controller.createOrder = (info) => {
                         return res('Enviado correctamente');
                     }
                 })
-            
-                /*smtpTransport.sendMail(mailOptions, (err, response) => {
-            
-                    if(err) {
-                        console.log('Error enviando el email') 
-                        console.log(err)
-                        return rej({ status: 500, message: `An error has ocurred sending the message to your email` });
-                    } else {
-                        console.log('Enviado correctamente')
-                        //Send status and user stored
-                        return rej('Enviado correctamente');
-                    }
-                });*/
-        
             });
 
            res(200)
 
         } catch(e) {
-        //Reject if an error has ocurred
+            //Reject if an error has ocurred
             rej({
                 status: 500,
                 message: `An error has ocurred in server: ${e}`

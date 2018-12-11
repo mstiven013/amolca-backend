@@ -62,9 +62,9 @@ async function getOrdersById(req, res) {
 async function createOrders(req, res) {
 
     //If not exists required fields
-    if(!req.body.cart || !req.body.shipping || !req.body.billing ) return res.status(400).send({status: 400, message: 'Bad request'})
+    if(!req.body.order.cart || !req.body.order.shipping || !req.body.order.billing || !req.body.country ) return res.status(400).send({status: 400, message: 'Bad request'})
 
-    let order = new Order(req.body);
+    let order = new Order(req.body.order);
 
     //Save order
     order.save((err, orderStored) => {
@@ -79,7 +79,7 @@ async function createOrders(req, res) {
             //If an error has ocurred
             if(err) return res.status(500).send({status: 500, message: `An error has ocurred saving this resource: ${err}`});
 
-            email.createOrder(orderStored)
+            email.createOrder(orderStored, req.body.country)
                 .then((resp) => {
                     return res.status(201).send(orderStored);
                 })
