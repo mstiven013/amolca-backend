@@ -1,0 +1,43 @@
+<div style="width: 100%; background-color: #f2f2f2; padding-bottom: 20px; padding-top: 20px;">
+    <div style="background-color: #fff; border-radius: 10px; overflow: hidden; -webkit-box-sizing: border-box; -moz-box-sizing: border-box; -ms-box-sizing: border-box; box-sizing: border-box;  margin-left: auto; margin-right: auto; width: 600px;">
+        <!--Header email-->
+        <div style="background-color: #f9f9f9; border-bottom: 1px solid #ccc; border-top-left-radius: 10px; border-top-right-radius: 10px; font-family: Arial; padding: 30px; text-align: center;">
+            <p style="font-size: 20px; font-weight: bold; margin: 0px;">
+                <a href="http://www.amolca.com/" target="_blank"><img src="http://amolca.com/assets/img/common/logo.png" width="auto" height="80px" alt=""></a>
+            </p>
+            <p style="font-size: 20px; font-weight: bold; margin: 20px auto 0px;">
+                Nuevo formulario de contacto desde:<br/> <span style="color: #00396F;">{{domain}}</span>
+            </p>
+        </div>
+        <!--Body email-->
+        <div style="color: #AAAAAA; font-size: 16px; line-height: normal; padding: 30px 50px; font-family: Arial;">
+            <p><b>Asunto del mensaje:</b> {{subject}}</p>
+
+            <p><b>Nombre completo:</b> {{name}}</p>
+
+            <p><b>Teléfono / Celular:</b> {{phone}}</p>
+
+            <p><b>Correo electrónico:</b> {{email}}</p>
+
+            <p><b>Ciudad de residencia:</b> {{city}}</p>
+
+            {{#if address}}
+                <p><b>Dirección de residencia:</b> {{address}}</p>
+            {{/if}}
+
+            <p><b>Mensaje:</b></p>
+            <p>{{message}}</p>
+
+        </div>
+        <!--Footer email-->
+        <div style="background-color: #00396F; color: #FFF; font-family: Arial; padding: 30px; text-align: center;">
+            <p style="margin: 0px;">
+                <a href="http://{{domain}}" target="_blank" style="color: #FFF;">Amolca Editorial médica y odontológica</a>
+            </p>
+            <p style="color: #FFF; margin-bottom: 5px;">©2018</p>
+            <p style="margin: 0px;">
+                <a href="http://{{domain}}/terminos-y-condiciones" target="_blank" style="color: #FFF;">Condiciones de servicio & Política de privacidad</a>
+            </p>
+        </div>
+    </div>
+</div>
