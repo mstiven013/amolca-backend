@@ -15,7 +15,7 @@ router.get('/', FormCtrl.getAllForms);
 router.get('/:id', FormCtrl.getFormsById);
 
 //Create Form
-router.post('/', auth.isAuth, FormCtrl.createForm);
+router.post('/', FormCtrl.createForm);
 
 //Delete an Form
 router.delete('/:id', auth.isAuth, FormCtrl.deleteForm);
