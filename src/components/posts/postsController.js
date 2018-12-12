@@ -114,40 +114,39 @@ controller.searchPosts = function(req, res) {
                 }
             }
 
-            if(array.length < 1) {
-                Author.find({ $text: { $search: "\"" + q + "\"" } })
-                    .exec((err, authors) => {
+            Author.find({ $text: { $search: "\"" + q + "\"" } })
+                .exec((err, authors) => {
 
-                        let authorIds = [];
-                        for (let a = 0; a < authors.length; a++) {
-                            authorIds.push(authors[a]._id);
-                        }
+                    let authorIds = [];
+                    for (let a = 0; a < authors.length; a++) {
+                        authorIds.push(authors[a]._id);
+                    }
 
-                        GlobalPost.find({ author: { $in: authorIds } })
-                            .populate(populateRelatedProducts)
-                            .populate(populateUserId)
-                            .populate(populateAuthor)
-                            .populate(populateSpecialty)
-                            .populate(populateInterest)
-                            .exec((err, authorbooks) => {
-                                if(err) return console.log(err)
+                    GlobalPost.find({ author: { $in: authorIds } })
+                        .populate(populateRelatedProducts)
+                        .populate(populateUserId)
+                        .populate(populateAuthor)
+                        .populate(populateSpecialty)
+                        .populate(populateInterest)
+                        .exec((err, authorbooks) => {
+                            if(err) return console.log(err)
 
-                                let arrBooks = [];
+                            let arrBooks = array;
 
-                                for (let i = 0; i < authorbooks.length; i++) {
-                                    const element = authorbooks[i];
+                            for (let i = 0; i < authorbooks.length; i++) {
+                                const element = authorbooks[i];
 
-                                    if(element.state !== 'DRAFT') {
-                                        arrBooks.push(element);
-                                    }
+                                const result = arrBooks.filter(b => b._id == element._id);
+                                console.log(result)
+
+                                if(result.length < 1 && element.state !== 'DRAFT') {
+                                    arrBooks.push(element);
                                 }
+                            }
 
-                                return res.status(200).send(arrBooks)
-                            })
-                    });
-            } else {
-                return res.status(200).send(array);
-            }
+                            return res.status(200).send(arrBooks)
+                        })
+                });
         })
 }
 
