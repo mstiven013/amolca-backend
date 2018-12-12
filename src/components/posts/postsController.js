@@ -137,7 +137,7 @@ controller.searchPosts = function(req, res) {
                                 const element = authorbooks[i];
 
                                 const result = arrBooks.filter(b => b._id == element._id);
-                                console.log(result)
+                                //console.log(result)
 
                                 if(result.length < 1 && element.state !== 'DRAFT') {
                                     arrBooks.push(element);
