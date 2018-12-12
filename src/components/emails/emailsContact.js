@@ -51,7 +51,7 @@ controller.send = (frm, mailer) => {
                 sendmail({
                     from: mailer.from,
                     to: mailer.to,
-                    //cc: mailer.cc,
+                    cc: mailer.cc,
                     subject: mailer.subject,
                     html: htmlToSend
                 }, (err, reply) => {
