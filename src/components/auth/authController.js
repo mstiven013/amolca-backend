@@ -73,11 +73,11 @@ async function signUp(req, res) {
         }, (err, reply) => {
             if(err) {
                 console.log('Error enviando el email')
-                return rej({ status: 500, message: `An error has ocurred sending the message to your email` });
+                return res.status(500).send({ status: 500, message: `An error has ocurred sending the message to your email` });
             } else {
                 console.log('Enviado correctamente')
                 //Send status and user stored
-                return res('Enviado correctamente');
+                return res.status(200).send({user: userStored, status: 200, message: 'Logged successfully', access_token: TokenService.createToken(userStored)});
             }
         })
 
