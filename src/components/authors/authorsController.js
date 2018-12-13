@@ -7,6 +7,12 @@ const Book = require('../books/BooksModel');
 const slugMiddleware = require('../services/slugMiddlewares');
 const controller = {};
 
+//"Specialty" populate
+const populateSpecialty = {
+    path: 'specialty',
+    select: '-__v -registerDate -metaTitle -metaDescription -metaTags -childs -parent -image -description -top'
+}
+
 controller.getAuthors = async function(req, res) {
 
     let limit = 100000;
@@ -27,6 +33,7 @@ controller.getAuthors = async function(req, res) {
 
     //Controller function to get ALL authors if not exists a query
     Author.find()
+        .populate(populateSpecialty)
         .limit(limit)
         .sort(sort)
         .exec((err, authors) => {
@@ -49,17 +56,19 @@ controller.getAuthors = async function(req, res) {
 controller.getAuthorsById = async function(req, res) {
     let authorId = req.params.id;
 
-    Author.findById(authorId, (err, author) => {
+    Author.findById(authorId)
+        .populate(populateSpecialty)
+        .exec((err, author) => {
 
-        //If author not exists
-        if(!author) return res.status(404).send({status: 404, message: 'This resource not exists'});
+            //If author not exists
+            if(!author) return res.status(404).send({status: 404, message: 'This resource not exists'});
 
-        //If an error has ocurred
-        if(err) return res.status(500).send({status: 500, message: `An error has ocurred in server: ${err}`});
+            //If an error has ocurred
+            if(err) return res.status(500).send({status: 500, message: `An error has ocurred in server: ${err}`});
 
-        return res.status(200).send(author);
+            return res.status(200).send(author);
 
-    });
+        });
 }
 
 //Controller function to get one book by Slug
@@ -67,6 +76,7 @@ controller.getAuthorsBySlug = async function(req, res) {
     let authorSlug = req.params.slug;
 
     Author.findOne({ slug: authorSlug })
+        .populate(populateSpecialty)
         .exec((err, author) => {
             //If author not exists
             if(!author) return res.status(404).send({status: 404, message: 'This resource not exists'});
