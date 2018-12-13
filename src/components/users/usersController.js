@@ -119,14 +119,7 @@ async function getCartsByUser(req, res) {
 }
 
 //Controller to delete one user
-async function deleteUser(req, res) {
-    if(req.headers["content-type"] !== 'application/json'){
-        return res.status(500).send({
-            status: 500,
-            message: 'Server not supported the Content-Type header sended in this request'
-        })
-    }
-    
+async function deleteUser(req, res) {    
     let userId = req.params.id;
 
     User.findById(userId, (err, user) => {
