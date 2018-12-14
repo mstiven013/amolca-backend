@@ -88,6 +88,58 @@ controller.getAllBooks = (req, res) => {
         })
 }
 
+controller.getBooksNavigation = (req, res) => {
+
+    let sortKey = 'title';
+    let sortOrder = -1;
+
+    if(req.query.orderby) {
+        sortKey = req.query.orderby;
+    }
+    if(req.query.order) {
+        sortOrder = req.query.order;
+    }
+
+    let sort = {[sortKey]: sortOrder};
+
+    //Controller function to get ALL Books if not exists a query
+    Book.findById(req.params.id)
+        .populate(populateRelatedProducts)
+        .populate(populateUserId)
+        .populate(populateAuthor)
+        .populate(populateSpecialty)
+        .populate(populateInterest)
+        .exec((err, book) => {
+            //If an error has ocurred in server
+            if(err) return res.status(500).send({status: 500, message: `An error has ocurred in server: ${err}`})
+
+            //If not exists book in db
+            if(!book) return res.status(404).send({status: 404, message: `Not exists book in db`})
+
+            Book.find()
+                .select('_id title')
+                .sort(sort)
+                .exec((err, list) => {
+
+                    let books = [book]
+
+                    for (let i = 0; i < list.length; i++) {
+                        const element = list[i];
+
+                        if(book.title === list[i].title ) {
+                            let prev = i - 1;
+                            let next = i + 1;
+                            books.push(list[prev]);
+                            books.push(list[next]);
+                        }
+
+                    }
+
+                    return res.status(200).send(books);
+                })
+        })
+}
+
 //Controller function to get one book by Id
 controller.getBooksById = (req, res) => {
     let bookId = req.params.id;

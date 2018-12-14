@@ -11,6 +11,9 @@ const auth = require('../auth/authMiddleware');
 //Get all books
 router.get('/', BookCtrl.getAllBooks);
 
+//Get all books
+router.get('/navigation/:id', BookCtrl.getBooksNavigation);
+
 //Get books by id
 router.get('/:id', BookCtrl.getBooksById);
 
