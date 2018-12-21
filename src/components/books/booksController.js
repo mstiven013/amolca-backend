@@ -121,7 +121,11 @@ controller.getBooksNavigation = (req, res) => {
                 .sort(sort)
                 .exec((err, list) => {
 
-                    let books = [book]
+                    let books = {
+                        selected: book,
+                        prev: null,
+                        next: null
+                    }
 
                     for (let i = 0; i < list.length; i++) {
                         const element = list[i];
@@ -129,8 +133,8 @@ controller.getBooksNavigation = (req, res) => {
                         if(book.title === list[i].title ) {
                             let prev = i - 1;
                             let next = i + 1;
-                            books.push(list[prev]);
-                            books.push(list[next]);
+                            books.prev = list[prev];
+                            books.next = list[next];
                         }
 
                     }
