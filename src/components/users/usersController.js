@@ -11,8 +11,13 @@ const Cart = require('../carts/cartsModel');
 
 //Controller to get ALL users
 async function getAllUsers(req, res) {
-    const users = await User.find();
-    res.json(users);
+    //Controller function to get ALL users if not exists a query
+    User.find().exec((err, users) => {
+        //If an error has ocurred in server
+        if(err) return res.status(500).send({status: 500, message: `An error has ocurred in server: ${err}`})
+        
+        return res.status(200).send(users);
+    })
 }
 
 //Controller to get ONE user
